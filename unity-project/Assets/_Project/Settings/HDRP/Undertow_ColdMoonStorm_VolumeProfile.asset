@@ -1,0 +1,53 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_Name: Undertow_ColdMoonStorm_VolumeProfile
+  m_Description: "Cold cyan-blue moonlight (6500K), volumetric fog (mean free path 28m, deep oceanic teal #0B1D28), contact shadows, SSR, filmic ACES tonemapping without crushing blacks."
+  m_Components:
+  - component: VolumetricFog
+    enabled: 1
+    albedo: {r: 0.08, g: 0.21, b: 0.28, a: 1.0}
+    meanFreePath: 28.0
+    baseHeight: 0.0
+    maximumHeight: 45.0
+    anisotropy: 0.65
+    globalLightProbeDimmer: 0.35
+  - component: PhysicallyBasedSky
+    enabled: 1
+    planetaryRadius: 6378137
+    groundTint: {r: 0.02, g: 0.05, b: 0.08, a: 1}
+  - component: VolumetricClouds
+    enabled: 1
+    cloudPreset: 3
+    densityMultiplier: 0.88
+    shapeFactor: 0.72
+    bottomAltitude: 1200
+    altitudeRange: 2500
+  - component: Exposure
+    enabled: 1
+    mode: 1
+    compensation: -0.35
+    limitMin: -3.5
+    limitMax: 4.5
+  - component: Tonemapping
+    enabled: 1
+    mode: 2
+    toeStrength: 0.38
+    shoulderStrength: 0.25
+  - component: ScreenSpaceReflection
+    enabled: 1
+    tracing: 1
+    minSmoothness: 0.25
+    rayMaxIterations: 64
+  - component: ContactShadows
+    enabled: 1
+    length: 0.35
+    opacity: 0.92
+    sampleCount: 16
+  - component: Bloom
+    enabled: 1
+    threshold: 1.1
+    intensity: 0.32
+    scatter: 0.68

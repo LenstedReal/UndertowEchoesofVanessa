@@ -1,0 +1,11 @@
+fileFormatVersion: 2
+guid: e90c5f74a14902c3dc2b17b66e3fc826
+ModelImporter:
+  serializedVersion: 21300
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 1
+    isReadable: 1
+    optimizeMesh: 1
