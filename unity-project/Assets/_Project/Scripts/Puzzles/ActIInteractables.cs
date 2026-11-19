@@ -4,6 +4,8 @@ using Undertow.Core;
 using Undertow.Player;
 using Undertow.Lantern;
 using Undertow.Sanity;
+using Undertow.Audio;
+using Undertow.Narrative;
 
 namespace Undertow.Puzzles
 {
