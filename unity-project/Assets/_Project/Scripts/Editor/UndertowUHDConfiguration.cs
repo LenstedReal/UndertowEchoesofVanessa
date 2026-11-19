@@ -13,7 +13,6 @@ namespace Undertow.Editor
             PlayerSettings.defaultScreenWidth = 3840;
             PlayerSettings.defaultScreenHeight = 2160;
             PlayerSettings.defaultIsNativeResolution = true;
-            PlayerSettings.displayResolutionDialog = ResolutionDialogSetting.Disabled;
             PlayerSettings.fullScreenMode = FullScreenMode.FullScreenWindow;
             PlayerSettings.runInBackground = false;
             PlayerSettings.resizableWindow = true;

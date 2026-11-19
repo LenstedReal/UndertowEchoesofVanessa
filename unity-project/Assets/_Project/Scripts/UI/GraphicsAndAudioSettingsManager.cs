@@ -82,7 +82,7 @@ namespace Undertow.UI
                 if (hd != null)
                 {
                     hd.antialiasing = currentProfile.AntiAliasing == AntiAliasingMode.SMAA
-                        ? HDAdditionalCameraData.AntialiasingMode.SubpixelMorphologicalAntialiasing
+                        ? ResolveSmaaMode()
                         : HDAdditionalCameraData.AntialiasingMode.TemporalAntialiasing;
                 }
                 PlayerCameraLook look = camera.GetComponent<PlayerCameraLook>();
@@ -124,6 +124,17 @@ namespace Undertow.UI
             AudioListener.volume = currentProfile.MasterVolume;
             PlayerPrefs.SetString(PreferencesKey, JsonUtility.ToJson(currentProfile));
             PlayerPrefs.Save();
+        }
+
+        private static HDAdditionalCameraData.AntialiasingMode ResolveSmaaMode()
+        {
+            // The enum member name differs between HDRP versions, so resolve it by name.
+            foreach (string candidate in new[] { "SubpixelMorphologicalAntialiasing", "SMAA" })
+            {
+                if (System.Enum.TryParse<HDAdditionalCameraData.AntialiasingMode>(candidate, out HDAdditionalCameraData.AntialiasingMode mode))
+                    return mode;
+            }
+            return HDAdditionalCameraData.AntialiasingMode.TemporalAntialiasing;
         }
     }
 }
