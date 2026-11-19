@@ -330,6 +330,7 @@ namespace Undertow.Editor
             Material brass = Mat("MAT_Blockout_AgedBrass", new Color(0.36f, 0.22f, 0.075f), 0.78f, 0.62f);
             Material sail = Mat("MAT_Blockout_TornSail", new Color(0.035f, 0.045f, 0.052f), 0.02f, 0.18f);
             Material warm = Mat("MAT_Blockout_Flame", new Color(1f, 0.31f, 0.055f), 0f, 0.9f, true);
+            Material accent = Mat("MAT_Blockout_Accent", new Color(0.08f, 0.34f, 0.39f), 0.45f, 0.72f, true);
             Material stone = Mat("MAT_Blockout_Stone", new Color(0.12f, 0.15f, 0.17f), 0.04f, 0.24f);
             ApplyPbrSet(deck, "T_WetAgedDeckWood");
             ApplyPbrSet(brass, "T_AntiqueBrass");
@@ -495,6 +496,7 @@ namespace Undertow.Editor
             Material ground = Mat("MAT_" + sceneName + "_Ground", groundColor, 0.12f, underwater ? 0.78f : 0.3f);
             Material structure = Mat("MAT_" + sceneName + "_Structure", underwater ? new Color(0.055f, 0.12f, 0.15f) : new Color(0.11f, 0.105f, 0.09f), 0.16f, 0.42f);
             Material accent = Mat("MAT_" + sceneName + "_Accent", new Color(0.08f, 0.34f, 0.39f), 0.45f, 0.72f, true);
+            Material warm = Mat("MAT_" + sceneName + "_Warm", new Color(1f, 0.31f, 0.055f), 0f, 0.9f, true);
             ApplyPbrSet(ground, act == GameAct.ActIV_SunkenTemple ? "T_SunkenTempleStone" : "T_WetAgedDeckWood");
             ApplyPbrSet(structure, act == GameAct.ActIV_SunkenTemple ? "T_SunkenTempleStone" : "T_WetAgedDeckWood");
             AddLighting(underwater ? new Color(0.025f, 0.12f, 0.16f) : new Color(0.035f, 0.045f, 0.06f), fogColor, underwater ? 0.028f : 0.018f, new Vector3(0, 1.6f, -8));
