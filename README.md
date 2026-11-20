@@ -2,22 +2,30 @@
 
 *Fifteen years ago, Adrian's little sister vanished into the sea. Now her lullaby is calling from the deep — and something down there has learned to speak with her voice.*
 
-Birinci şahıs psikolojik korku oyunu · Windows / Steam · Unity 6 HDRP · FMOD + Steam Audio · 10 dilde altyazı · LenstedReal
+Birinci şahıs psikolojik korku oyunu · Windows / Steam · Unity 6 HDRP · 10 dil · LenstedReal
+
+## Oyun
+
+Oyunun tamamı [`unity-project/`](unity-project/) klasöründe: Unity **6000.3.27f1**, HDRP 17.3.0, sürüm **0.3.0**. Açma, build alma ve güncel durum: [`unity-project/README.md`](unity-project/README.md).
 
 ## Belgeler
 | Dosya | İçerik |
 |---|---|
 | [`docs/01_STORY_BIBLE.md`](docs/01_STORY_BIBLE.md) | Hikâyenin tamamı, karakterler, kronoloji, 4 Act, 3 son, ipucu haritası, ninni (**spoiler**) |
 | [`docs/02_GAME_DESIGN_AND_TODO.md`](docs/02_GAME_DESIGN_AND_TODO.md) | Sistemler, ses motoru, altyazı, yayıncı tasarımı, Faz 0–4 yapılacaklar, riskler |
-| [`docs/03_PROTOTYPE_AUDIT_TR.md`](docs/03_PROTOTYPE_AUDIT_TR.md) | Bu depodaki web prototipinin denetimi: Unity'ye taşınacaklar, çelişkiler ve kararlar |
+| [`docs/03_PROTOTYPE_AUDIT_TR.md`](docs/03_PROTOTYPE_AUDIT_TR.md) | Web prototipinin denetimi: Unity'ye taşınanlar, çelişkiler ve kararlar |
+| [`unity-project/CHANGES.md`](unity-project/CHANGES.md) | Sürüm değişiklikleri |
+| [`unity-project/KNOWN_ISSUES.md`](unity-project/KNOWN_ISSUES.md) | Bilinen durumlar ve sınırlar |
 | [`attachments/UNDERTOW_GROK_MASTER_PROMPT_TR.md`](attachments/UNDERTOW_GROK_MASTER_PROMPT_TR.md) | Üretim talimatı ve kalite çıtası |
-
-## Depoda ne var
-- `src/game/`: tarayıcıda oynanan **tasarım prototipi** (React + three.js). 4 Act'in yerleşimi ve bulmacaları burada denendi. Asıl oyun değil.
-- Asıl oyun: Unity 6 + HDRP, ayrı private depoda kurulacak (Faz 0).
+| [`attachments/GROK_MASTER_PLAN_TR.md`](attachments/GROK_MASTER_PLAN_TR.md) | İlk ana plan |
 
 ## Durum
 - [x] Story Bible, oyun tasarımı, prototip denetimi
-- [ ] Faz 0: Unity projesi, FMOD + Steam Audio, Localization, Git LFS
-- [ ] Faz 1: Act I dikey kesit (45 dk)
-- [ ] Faz 2: Steam sayfası + demo, Next Fest
+- [x] Unity 6 HDRP projesi: dört bölüm, üç son, 10 dil, ayarlar, fotoğraf modu (0.3.0)
+- [ ] Unity Editor'de ilk açılış ve oynanış testi (gerçek ekran kartlı Windows bilgisayar)
+- [ ] Seslendirme kaydı, 8 dilin anadili kontrolü
+- [ ] Steam sayfası + demo, Next Fest
+
+## Geçmiş
+
+Grok'ta yapılan tarayıcı prototipi (React + three.js) 20 Kasım 2026'da repodan kaldırıldı; dört bölümün yerleşimi ve bulmacaları Unity'ye taşınmıştı. Kodu git geçmişinde duruyor (`19ff2e2` ve öncesi).

@@ -1,5 +1,7 @@
 # Web Prototipi Denetimi (14 Kasım 2026)
 
+> **20 Kasım 2026:** Prototipin bütün içeriği Unity projesine taşındıktan sonra tarayıcı prototipi repodan kaldırıldı. Bu belge karar kaydı olarak duruyor; prototipin kodu git geçmişinde (`19ff2e2` ve öncesi).
+
 Bu depodaki çalışan oyun, Grok'ta yapılmış bir **tarayıcı prototipi** (React + three.js, `src/game/`). Unity'deki asıl oyun değil. Ama 4 Act'in yerleşimi ve bulmacaları burada oynanabilir hâlde, o yüzden **atılmıyor**. Unity'de gri kutu planı olarak kullanılacak.
 
 Kanon sırası: `01_STORY_BIBLE.md` > `02_GAME_DESIGN_AND_TODO.md` > prototip metinleri. Bir çelişki varsa Story Bible geçerli.
