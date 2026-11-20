@@ -1,4 +1,4 @@
-# GROK ANA PROMPT — Abyssal Requiem: Echoes of Vanessa (Android-first)
+# ANA PROMPT — Abyssal Requiem: Echoes of Vanessa (Android-first)
 
 Aşağıdaki talimatı eksiksiz uygula. Bu ilk aşamada YALNIZCA analiz, mimari ve uygulanabilir geliştirme planı üret; henüz kod yazma, büyük dosyalar üretme veya mevcut tasarımı onay almadan değiştirme.
 
@@ -66,7 +66,7 @@ Antika yağ feneri oyunun en önemli görsel ve mekanik odağıdır. Yağ miktar
 
 - Müzik kutusu/ninni: ses dizisini dinleme, basit tekrarlama veya ortamda farklı noktalardaki rezonansı bulma. Dokunmatik ekranda hassas zamanlama gerektirmesin; erişilebilir ses/altyazı ipucu seçeneği olsun.
 - Enkaz/ağırlık merkezi bulmacası: fizik simülasyonunu mobilde kararlı ve basit tut; nesneler kilitlenirse oyuncuyu soft-lock'tan çıkaran reset olmalı.
-- Her bulmaca: giriş, ipuçları, başarılı/başarısız durum, reset koşulu ve otomatik test senaryosuyla tarif edilsin. Bulmaca çözümü yalnızca Grok'un belleğine bağlı olmasın; oyun içi tutarlı ipuçları verilsin.
+- Her bulmaca: giriş, ipuçları, başarılı/başarısız durum, reset koşulu ve otomatik test senaryosuyla tarif edilsin. Bulmaca çözümü yalnızca yapay zekânın belleğine bağlı olmasın; oyun içi tutarlı ipuçları verilsin.
 
 ## DÖRT ACT'İN PLANLANMASI
 

@@ -2,7 +2,7 @@
 
 > **20 Kasım 2026:** Prototipin bütün içeriği Unity projesine taşındıktan sonra tarayıcı prototipi repodan kaldırıldı. Bu belge karar kaydı olarak duruyor; prototipin kodu git geçmişinde (`19ff2e2` ve öncesi).
 
-Bu depodaki çalışan oyun, Grok'ta yapılmış bir **tarayıcı prototipi** (React + three.js, `src/game/`). Unity'deki asıl oyun değil. Ama 4 Act'in yerleşimi ve bulmacaları burada oynanabilir hâlde, o yüzden **atılmıyor**. Unity'de gri kutu planı olarak kullanılacak.
+Bu depodaki çalışan oyun, yapay zekâ ile yapılmış bir **tarayıcı prototipi** (React + three.js, `src/game/`). Unity'deki asıl oyun değil. Ama 4 Act'in yerleşimi ve bulmacaları burada oynanabilir hâlde, o yüzden **atılmıyor**. Unity'de gri kutu planı olarak kullanılacak.
 
 Kanon sırası: `01_STORY_BIBLE.md` > `02_GAME_DESIGN_AND_TODO.md` > prototip metinleri. Bir çelişki varsa Story Bible geçerli.
 
@@ -15,7 +15,7 @@ Kanon sırası: `01_STORY_BIBLE.md` > `02_GAME_DESIGN_AND_TODO.md` > prototip me
 | `src/game/audio.ts` | Prosedürel ses (sadece referans; Unity'de FMOD) |
 | `src/game/save.ts` | Bayrak (flag) tabanlı kayıt |
 | `src/components/HorrorGame.tsx` | Menü, HUD, ayarlar, günlük, kartlar |
-| `attachments/` | Grok ana talimatı (`UNDERTOW_GROK_MASTER_PROMPT_TR.md`), ana plan, referans görseller, eski "Abyssal Requiem" paketleri |
+| `attachments/` | Ana üretim talimatı (`UNDERTOW_MASTER_PROMPT_TR.md`), ana plan, referans görseller, eski "Abyssal Requiem" paketleri |
 
 ## 2. Unity'ye taşınacaklar (koru)
 
@@ -26,7 +26,7 @@ Kanon sırası: `01_STORY_BIBLE.md` > `02_GAME_DESIGN_AND_TODO.md` > prototip me
 - **Act IV bulmacası:** dört ayna, her birinde çizik yönünde 1-2-3-1 kez çevirme; cam prizma olmadan ışın sunağa ulaşmaz; galerideki mercek en son alınır.
 - **Sis renkleri ve yoğunlukları** (`ACTS`): Act I #4E5D62 / 0.052 · Act II #3A4A54 / 0.04 · Act III #3E4B52 / 0.036 · Act IV #0E3C44 / 0.046.
 - **Act IV'teki varlık kuralı:** "O bir düşman değil. Işık kesilirse yaklaşır, vurmaz. Feneri tut." Story Bible'daki Undertow ile uyumlu, aynen kalır.
-- Akıl sağlığı başlangıç değerleri: Grok talimatındaki tablo (karanlık −0.8/sn, 6 sn'den uzun denize bakma −1.2/sn, güvenli ışık +1/sn, rahatsız edici nesne −4, müzik kutusu +15).
+- Akıl sağlığı başlangıç değerleri: ana üretim talimatındaki tablo (karanlık −0.8/sn, 6 sn'den uzun denize bakma −1.2/sn, güvenli ışık +1/sn, rahatsız edici nesne −4, müzik kutusu +15).
 
 ## 3. Çelişkiler ve kararlar
 
@@ -41,10 +41,10 @@ Kanon sırası: `01_STORY_BIBLE.md` > `02_GAME_DESIGN_AND_TODO.md` > prototip me
 
 ## 4. Depo düzeni (hiçbir şey silinmedi, öneri)
 
-- `attachments/UNDERTOW_GROK_MASTER_PROMPT_TR.md`, `.txt` ve `-2.txt` **aynı dosya** (3 kopya). `..._PACK_TR.zip` ve `..._PACK_TR-2.zip` de aynı. Birer kopya yeterli; istersen sonra temizleriz. **20 Kasım 2026: kopyalar silindi.**
+- `attachments/UNDERTOW_MASTER_PROMPT_TR.md`, `.txt` ve `-2.txt` **aynı dosya** (3 kopya). `..._PACK_TR.zip` ve `..._PACK_TR-2.zip` de aynı. Birer kopya yeterli; istersen sonra temizleriz. **20 Kasım 2026: kopyalar silindi.**
 - `AbyssalRequiem_*.zip` eski çalışma adı. Arşiv olarak kalabilir.
 - `.vercel/output/` (37 dosya) derleme çıktısı. Vercel'e bu depodan yayın yapılmıyorsa `.gitignore`'a eklenebilir.
-- `.grok/`, `AGENTS.md`, `startup.sh`: Grok çalışma alanı dosyaları; prototipi Grok'ta açmak için gerekli, dokunulmuyor.
+- Prototipin çalışma alanı dosyaları (`AGENTS.md`, `startup.sh` ve ayar klasörü): prototipi geliştirme ortamında açmak için gerekliydi; 20 Kasım 2026'da prototiple birlikte kaldırıldı.
 - **Unity projesi:** Bu depoya karıştırılmaz. Önerilen: ayrı bir **private** depo (`undertow-unity`), Git LFS ile. Bu depo tasarım + prototip olarak kalır.
 - Depo herkese açıksa: `docs/01_STORY_BIBLE.md` bütün sonları anlatıyor. Steam çıkışından önce bu depo private yapılmalı ya da Story Bible private depoya taşınmalı.
 
@@ -54,4 +54,4 @@ Kanon sırası: `01_STORY_BIBLE.md` > `02_GAME_DESIGN_AND_TODO.md` > prototip me
 npm install
 npm run dev      # http://localhost:8080
 ```
-Not: Bu komutlar bu denetimde çalıştırılmadı; Grok çalışma alanı ayarlarına (`scripts/with-app-env.mjs`) bağlı.
+Not: Bu komutlar bu denetimde çalıştırılmadı; prototipin çalışma alanı ayarlarına (`scripts/with-app-env.mjs`) bağlıydı.

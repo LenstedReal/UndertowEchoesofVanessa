@@ -5,9 +5,9 @@
 Oyun koduna, sürüm bilgilerine ve oyunun `.md` belgelerine dokunulmadı. Silinenlerin hepsi git geçmişinde duruyor.
 
 - Oyunun hiçbir yerde kullanmadığı eski sanat dosyaları kaldırıldı: 18 adet 4K PNG doku (359 MB, Git LFS), 10 OBJ model, 5 eski malzeme. Kodda, sahnelerde ve ayarlarda bunlara tek bir bağlantı yoktu. Taze bir klon artık 359 MB indirmez, Unity'nin ilk açılışı kısalır.
-- Birebir aynı kopyalar kaldırıldı: Grok ana talimatının iki `.txt` kopyası (aslı `.md` duruyor), `UNDERTOW_GROK_MASTER_PROMPT_PACK_TR-2.zip`, `AbyssalRequiem_UnityAI_Pack.zip` (aynısı `AbyssalRequiem_Grok_MobileFirst_Pack.zip` içinde), `artifacts/` içindeki iki görsel (aynıları `public/` içinde).
+- Birebir aynı kopyalar kaldırıldı: ana üretim talimatının iki `.txt` kopyası (aslı `.md` duruyor), talimat paketinin `-2.zip` kopyası, `AbyssalRequiem_UnityAI_Pack.zip` (aynısı öteki Abyssal Requiem paketinin içindeydi), `artifacts/` içindeki iki görsel (aynıları `public/` içinde).
 - Önceki teslimin artık var olmayan dosyaları gösteren iki SHA-256 listesi kaldırıldı.
-- Repoda yalnızca oyun ve belgeleri kaldı. Grok'ta yapılmış tarayıcı prototipi (`src`, `public`, `server`, `scripts`, `migrations`, `.grok`, `.vercel`, web projesi ayar dosyaları ve Grok'un `AGENTS.md`'si), `artifacts/` görselleri, ekteki referans görseller ve eski paket zip'leri kaldırıldı. Dört bölümün yerleşimi ve bulmacaları zaten Unity'ye taşınmıştı.
+- Repoda yalnızca oyun ve belgeleri kaldı. İlk tarayıcı prototipi (`src`, `public`, `server`, `scripts`, `migrations`, `.vercel`, çalışma alanı ayarları, web projesi ayar dosyaları ve `AGENTS.md`), `artifacts/` görselleri, ekteki referans görseller ve eski paket zip'leri kaldırıldı. Dört bölümün yerleşimi ve bulmacaları zaten Unity'ye taşınmıştı.
 - Kalanlar: `unity-project/` (oyun), `README.md`, `docs/` (hikâye, tasarım, denetim), `attachments/` içindeki iki `.md` ve `.gitignore`.
 
 ## 0.3.0 — 20 Kasım 2026

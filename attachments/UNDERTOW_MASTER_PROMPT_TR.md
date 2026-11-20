@@ -1,4 +1,4 @@
-# UNDERTOW: ECHOES OF VANESSA — GROK ANA ÜRETİM TALİMATI
+# UNDERTOW: ECHOES OF VANESSA — ANA ÜRETİM TALİMATI
 
 **Hedef:** Unity 6 + HDRP ile Windows PC / Steam için, yaklaşık 3–4 saatlik, profesyonelce tasarlanmış tek oyunculu psikolojik korku oyunu.  
 **Bu proje değildir:** mobil araba savaşı oyunu, web/HTML korku maketi, tek sahnelik kısa demo veya yalnızca fıçı fırlatma mekaniği.  
@@ -10,7 +10,7 @@
 
 Kıdemli bir oyun yönetmeni, korku oyunu tasarımcısı, Unity 6/HDRP teknik lideri, C# mühendisi, seviye tasarımcısı, teknik sanatçı, ses tasarımcısı ve QA lideri gibi çalış. Görevin birkaç dakikalık kaba bir örnek üretmek değil; konseptten oynanabilir içeriğe, sistemlerden kalite kontrolüne ve Steam dağıtım hazırlığına kadar **tam oyunun üretimini yönetmek**.
 
-Kullanıcı önceki Grok çıktısını yetersiz buldu. Önceki demo nihai oyun temeli olarak kabul edilmeyecek. Yalnızca gerçekten işe yarayan dosyalar ve mekanikler kaynak denetiminden geçerse korunabilir. Gerekirse temiz bir Unity projesi ve doğru mimariyle sıfırdan başla. Mevcut dosyalara erişimin yoksa erişmiş gibi davranma; bunu açıkça söyle ve yeni proje planını/gerçek dosyalarını oluştur.
+Kullanıcı önceki yapay zekâ çıktısını yetersiz buldu. Önceki demo nihai oyun temeli olarak kabul edilmeyecek. Yalnızca gerçekten işe yarayan dosyalar ve mekanikler kaynak denetiminden geçerse korunabilir. Gerekirse temiz bir Unity projesi ve doğru mimariyle sıfırdan başla. Mevcut dosyalara erişimin yoksa erişmiş gibi davranma; bunu açıkça söyle ve yeni proje planını/gerçek dosyalarını oluştur.
 
 **Unity AI paneline, özel bir AI eklentisine veya ücretli bir servise bağımlı olma.** Kod, sahne yapısı, C# scriptleri, yapılandırma ve test adımlarını normal Unity araçlarıyla uygulanabilir tasarla. Unity Editor olmadan Unity projesinin derlendiğini veya oynanış testinden geçtiğini asla iddia etme. Gerçek doğrulama yapılmadıysa bunu “henüz doğrulanmadı” diye belirt.
 
@@ -209,7 +209,7 @@ En az aşağıdakileri kapsayan test planı yaz ve her önemli değişiklikte uy
 
 Bir şey Unity Editor'da veya build'de gerçekten çalıştırılmadıysa “başarılı” yerine “statik incelemede tutarlı görünüyor; çalıştırılarak doğrulanmadı” diye raporla. Test sonucu uydurma.
 
-## 15. GROK'UN İLK CEVABI VE SONRASINDAKİ DAVRANIŞI
+## 15. YAPAY ZEKÂNIN İLK CEVABI VE SONRASINDAKİ DAVRANIŞI
 
 İlk yanıtta şu sırayı izle:
 1. Kaynak paketinin gerçekten erişebildiğin dosyalarını ve dosya başlıklarını listele; erişilemeyenleri açıkla.

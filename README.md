@@ -16,8 +16,8 @@ Oyunun tamamı [`unity-project/`](unity-project/) klasöründe: Unity **6000.3.2
 | [`docs/03_PROTOTYPE_AUDIT_TR.md`](docs/03_PROTOTYPE_AUDIT_TR.md) | Web prototipinin denetimi: Unity'ye taşınanlar, çelişkiler ve kararlar |
 | [`unity-project/CHANGES.md`](unity-project/CHANGES.md) | Sürüm değişiklikleri |
 | [`unity-project/KNOWN_ISSUES.md`](unity-project/KNOWN_ISSUES.md) | Bilinen durumlar ve sınırlar |
-| [`attachments/UNDERTOW_GROK_MASTER_PROMPT_TR.md`](attachments/UNDERTOW_GROK_MASTER_PROMPT_TR.md) | Üretim talimatı ve kalite çıtası |
-| [`attachments/GROK_MASTER_PLAN_TR.md`](attachments/GROK_MASTER_PLAN_TR.md) | İlk ana plan |
+| [`attachments/UNDERTOW_MASTER_PROMPT_TR.md`](attachments/UNDERTOW_MASTER_PROMPT_TR.md) | Üretim talimatı ve kalite çıtası |
+| [`attachments/MASTER_PLAN_TR.md`](attachments/MASTER_PLAN_TR.md) | İlk ana plan |
 
 ## Durum
 - [x] Story Bible, oyun tasarımı, prototip denetimi
@@ -28,4 +28,4 @@ Oyunun tamamı [`unity-project/`](unity-project/) klasöründe: Unity **6000.3.2
 
 ## Geçmiş
 
-Grok'ta yapılan tarayıcı prototipi (React + three.js) 20 Kasım 2026'da repodan kaldırıldı; dört bölümün yerleşimi ve bulmacaları Unity'ye taşınmıştı. Kodu git geçmişinde duruyor (`19ff2e2` ve öncesi).
+İlk tarayıcı prototipi (React + three.js) 20 Kasım 2026'da repodan kaldırıldı; dört bölümün yerleşimi ve bulmacaları Unity'ye taşınmıştı. Kodu git geçmişinde duruyor (`19ff2e2` ve öncesi).
