@@ -5,79 +5,80 @@ using UnityEngine;
 
 namespace Undertow.Editor
 {
-    /// <summary>Enforces source-asset import settings for the 4K HDRP target.</summary>
+    /// <summary>
+    /// Import rules for the game's generated assets: albedo maps are sRGB with mips and anisotropy, "_n" maps are
+    /// normal maps, UI images stay uncompressed, audio is streamed or decompressed by length.
+    /// ConfigureAllProjectAssets (build step 1) re-applies the rules to everything and bakes the HDRP materials.
+    /// </summary>
     public sealed class UndertowAssetImportQuality : AssetPostprocessor
     {
-        private const string TextureRoot = "Assets/_Project/Textures/";
-        private const string MeshRoot = "Assets/_Project/Art/Meshes/";
+        public const string TextureRoot = "Assets/_Project/Resources/Undertow/Textures/";
+        public const string UiRoot = "Assets/_Project/Resources/Undertow/UI/";
+        public const string AudioRoot = "Assets/_Project/Resources/Undertow/Audio/";
 
-        private void OnPreprocessTexture()
+        void OnPreprocessTexture()
         {
-            if (!assetPath.StartsWith(TextureRoot)) return;
             var importer = (TextureImporter)assetImporter;
-            string file = Path.GetFileNameWithoutExtension(assetPath);
-            bool normal = file.EndsWith("_Normal");
-            bool mask = file.EndsWith("_Mask");
-            importer.maxTextureSize = 4096;
-            importer.textureCompression = TextureImporterCompression.CompressedHQ;
-            importer.compressionQuality = 100;
-            importer.mipmapEnabled = true;
-            importer.streamingMipmaps = true;
-            importer.streamingMipmapsPriority = 0;
-            importer.filterMode = FilterMode.Trilinear;
-            importer.anisoLevel = 8;
-            importer.wrapMode = TextureWrapMode.Repeat;
-            importer.npotScale = TextureImporterNPOTScale.None;
-            importer.textureType = normal ? TextureImporterType.NormalMap : TextureImporterType.Default;
-            importer.sRGBTexture = !normal && !mask;
-            importer.alphaIsTransparency = file.Contains("TornBlackSail") && !normal && !mask;
-        }
-
-        private void OnPreprocessModel()
-        {
-            if (!assetPath.StartsWith(MeshRoot)) return;
-            var importer = (ModelImporter)assetImporter;
-            importer.meshCompression = ModelImporterMeshCompression.Off;
-            importer.importNormals = ModelImporterNormals.Import;
-            importer.importTangents = ModelImporterTangents.CalculateMikk;
-            importer.normalSmoothingAngle = 60f;
-            importer.optimizeMeshPolygons = true;
-            importer.optimizeMeshVertices = true;
-            importer.weldVertices = true;
-            importer.isReadable = false;
-            importer.importCameras = false;
-            importer.importLights = false;
-            importer.importAnimation = false;
-        }
-
-        [MenuItem("Undertow/Configure 4K Texture & Mesh Importers")]
-        public static void ConfigureAllProjectAssets()
-        {
-            string[] textureGuids = AssetDatabase.FindAssets("t:Texture2D", new[] { "Assets/_Project/Textures" });
-            int textures = 0;
-            foreach (string guid in textureGuids)
+            if (assetPath.StartsWith(TextureRoot))
             {
-                string path = AssetDatabase.GUIDToAssetPath(guid);
-                var importer = AssetImporter.GetAtPath(path) as TextureImporter;
-                if (importer == null) continue;
-                string file = Path.GetFileNameWithoutExtension(path);
-                bool normal = file.EndsWith("_Normal");
-                bool mask = file.EndsWith("_Mask");
-                importer.maxTextureSize = 4096;
-                importer.textureCompression = TextureImporterCompression.CompressedHQ;
-                importer.compressionQuality = 100;
+                string file = Path.GetFileNameWithoutExtension(assetPath);
+                bool normal = file.EndsWith("_n");
+                bool drawing = file.StartsWith("drawing") || file == "portrait_a" || file == "familytree_a";
+                importer.textureType = normal ? TextureImporterType.NormalMap : TextureImporterType.Default;
+                importer.sRGBTexture = !normal;
                 importer.mipmapEnabled = true;
                 importer.streamingMipmaps = true;
                 importer.filterMode = FilterMode.Trilinear;
-                importer.anisoLevel = 8;
-                importer.wrapMode = TextureWrapMode.Repeat;
-                importer.textureType = normal ? TextureImporterType.NormalMap : TextureImporterType.Default;
-                importer.sRGBTexture = !normal && !mask;
-                importer.SaveAndReimport();
-                textures++;
+                importer.anisoLevel = normal ? 4 : 8;
+                importer.wrapMode = drawing ? TextureWrapMode.Clamp : TextureWrapMode.Repeat;
+                importer.maxTextureSize = 2048;
+                importer.textureCompression = TextureImporterCompression.CompressedHQ;
+                importer.isReadable = false;
+                importer.alphaSource = TextureImporterAlphaSource.None;
             }
-            AssetDatabase.SaveAssets();
-            Debug.Log($"[Undertow] Configured {textures} source textures for 4K HDRP import (4096 max, HQ compression, mip streaming, correct color spaces).");
+            else if (assetPath.StartsWith(UiRoot))
+            {
+                importer.textureType = TextureImporterType.Default;
+                importer.sRGBTexture = true;
+                importer.mipmapEnabled = false;
+                importer.textureCompression = TextureImporterCompression.Uncompressed;
+                importer.wrapMode = TextureWrapMode.Clamp;
+                importer.alphaIsTransparency = true;
+            }
+        }
+
+        void OnPreprocessAudio()
+        {
+            if (!assetPath.StartsWith(AudioRoot)) return;
+            var importer = (AudioImporter)assetImporter;
+            string file = Path.GetFileNameWithoutExtension(assetPath);
+            bool longClip = file.StartsWith("amb_") || file.StartsWith("mus_") || file.StartsWith("lead_");
+            var s = importer.defaultSampleSettings;
+            s.loadType = longClip ? AudioClipLoadType.Streaming : AudioClipLoadType.DecompressOnLoad;
+            s.compressionFormat = AudioCompressionFormat.Vorbis;
+            s.quality = longClip ? 0.6f : 0.75f;
+            s.preloadAudioData = !longClip;
+            importer.defaultSampleSettings = s;
+            importer.loadInBackground = longClip;
+            importer.forceToMono = false;
+        }
+
+        [MenuItem("Undertow/Configure Texture Importers and Bake Materials")]
+        public static void ConfigureAllProjectAssets()
+        {
+            int n = 0;
+            foreach (var root in new[] { TextureRoot, UiRoot, AudioRoot })
+            {
+                if (!Directory.Exists(root)) continue;
+                foreach (var path in Directory.GetFiles(root))
+                {
+                    if (path.EndsWith(".meta")) continue;
+                    AssetDatabase.ImportAsset(path.Replace('\\', '/'), ImportAssetOptions.ForceUpdate);
+                    n++;
+                }
+            }
+            int mats = UndertowProjectSetup.BakeMaterials();
+            Debug.Log("[Undertow] re-imported " + n + " assets, baked " + mats + " HDRP materials.");
         }
     }
 }

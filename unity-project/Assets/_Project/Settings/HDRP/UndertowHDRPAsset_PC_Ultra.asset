@@ -9,48 +9,6 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 49222d29110044b1991378791446e090, type: 3}
+  m_Script: {fileID: 11500000, guid: 0cf1dab834d4ec34195b920ea7bbf9ec, type: 3}
   m_Name: UndertowHDRPAsset_PC_Ultra
   m_EditorClassIdentifier: 
-  m_RenderPipelineSettings:
-    supportedLitShaderMode: 2
-    colorBufferFormat: 1
-    supportShadowMask: 1
-    supportSSR: 1
-    supportSSAO: 1
-    supportSSGI: 1
-    supportVolumetrics: 1
-    supportVolumetricClouds: 1
-    supportWater: 1
-    supportSubsurfaceScattering: 1
-    increaseSssSampleCount: 1
-    supportTransparentBackface: 1
-    supportTransparentDepthPrepass: 1
-    supportTransparentDepthPostpass: 1
-    supportCustomPass: 1
-    supportDecals: 1
-    msaaSampleCount: 1
-    supportMotionVectors: 1
-    supportRuntimeDebugDisplay: 0
-    supportDitheringCrossFade: 1
-    supportTerrainHole: 1
-    supportRayTracing: 0
-    lightLoopSettings:
-      planarReflectionAtlasSize: 2048
-      cookieAtlasSize: 4096
-      reflectionProbeCacheSize: 64
-      maxDirectionalLightsOnScreen: 4
-      maxPunctualLightsOnScreen: 128
-      maxAreaLightsOnScreen: 32
-    hdShadowInitParams:
-      directionalShadowsDepthBits: 32
-      punctualLightShadowAtlas:
-        shadowAtlasResolution: 4096
-        shadowAtlasBits: 24
-      areaLightShadowAtlas:
-        shadowAtlasResolution: 2048
-        shadowAtlasBits: 24
-      maxShadowRequests: 64
-    postProcessSettings:
-      lutSize: 32
-      lutFormat: 1

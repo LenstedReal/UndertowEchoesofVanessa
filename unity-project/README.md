@@ -1,73 +1,93 @@
-# Undertow: Echoes of Vanessa — Unity 6 HDRP
+# Undertow: Echoes of Vanessa — Unity 6 HDRP (v0.3.0)
 
-**Unity Editor:** `6000.0.23f1`  
-**Render Pipeline:** HDRP `17.0.3`  
-**Target:** Windows x86-64  
-**Visual target:** 3840×2160 UHD output, 4K source PBR maps, HDRP temporal anti-aliasing, volumetric atmosphere, high-quality shadows and texture mip streaming.
+Birinci şahıs, hikâye odaklı psikolojik korku oyunu. Dört bölüm (Lanetli Kalyon, Gemi Mezarlığı, Terk Edilmiş Liman, Batık Tapınak), üç son, on dil.
 
-> This is an ambitious playable prototype / vertical-slice project, not a finished 3–4 hour photorealistic commercial game. Unity Editor compilation, runtime, target-GPU performance and Windows binary creation still have to be verified on a machine with Unity installed.
+| | |
+|---|---|
+| Unity Editor | **6000.3.27f1** |
+| Render pipeline | HDRP **17.3.0** (core, shadergraph, vfx 17.3.0) |
+| Input | Input System 1.11.2 (yalnızca yeni sistem) |
+| Hedef | Windows x86-64, DirectX 12 / DirectX 11 |
+| Sürüm | `bundleVersion` 0.3.0 |
 
-## Open the project
+## Durum — dürüst özet
 
-1. Extract the complete project folder.
-2. Install Unity Hub and Unity Editor `6000.0.23f1` with Windows Build Support (IL2CPP).
-3. In Unity Hub choose **Add > Add project from disk** and select the folder containing `Assets`, `Packages` and `ProjectSettings`.
-4. Wait for package resolution and asset import. The first import of 18 4K texture maps may take several minutes and requires substantial disk/RAM/GPU memory.
-5. Open the project and wait for compilation to finish.
-6. Run **Undertow > Configure 4K Texture & Mesh Importers** once if Unity has not applied the import settings automatically.
-7. Run **Undertow > Build All Canonical Scenes & Prefabs**. This regenerates the six scene hierarchies and generated HDRP materials from the included Editor tool.
-8. Open `Assets/_Project/Scenes/ActI_MercifulRequiem.unity` and press Play.
+**Yapıldı ve burada doğrulandı**
 
-## 4K asset configuration
+- Bütün oyun kodu yeniden yazıldı: `Undertow.Logic` (Unity'den bağımsız saf C#), `Undertow.Runtime`, `Undertow.Editor`, `Undertow.Tests.EditMode`.
+- Derleme kapısı: kod, Unity 6000.3.27f1 / HDRP 17.3.0 / Input System 1.11.2 / uGUI kaynaklarından üretilmiş API taslaklarına karşı derlendi. **Oyun (player) ve editör yapılandırmasında 0 hata, 0 uyarı.**
+- Mantık testleri: **52/52 geçti.** Bunlar .NET 8 üzerinde, kendi küçük test koşucumla çalıştı; Unity'nin Test Runner'ında değil. Aynı testler Unity'de `Window > General > Test Runner > EditMode` altında da var.
+- Hikâye yürüyüşü: dört bölümün bütün dalları (Echo/Mimic yolu, cevap/sessizlik, iki ninni seçimi) mantık katmanında baştan sona oynatıldı.
+- Yerelleştirme: 10 dilin her biri 685 anahtarın tamamını içeriyor; yer tutucular, not uzunlukları ve kritik ipuçları test ediliyor.
 
-`Assets/_Project/Textures/` contains 18 4096×4096 PNG maps across six PBR sets:
+**Yapılmadı / burada yapılamaz**
 
-- Wet aged deck wood (Albedo, Normal, Mask)
-- Antique brass (Albedo, Normal, Mask)
-- Torn black sail (Albedo, Normal, Mask)
-- Sunken temple stone (Albedo, Normal, Mask)
-- Storm ocean (Albedo, Normal, Mask)
-- Underwater water (Albedo, Normal, Mask)
+- Proje **Unity Editor'de açılmadı, Play'e basılmadı, Windows build'i alınmadı.** Bu ortamda Unity ve GPU yok. İlk açılışta hata çıkarsa bana tam metniyle gönder.
+- Performans, görüntü kalitesi ve ses karışımı gerçek donanımda ölçülmedi.
+- Seslendirme yok: konuşmalar şimdilik geçici "mırıltı" sesleri + altyazı. Müzik ve efektler oyun için üretildi (telifsiz, özgün).
+- Türkçe dışındaki 8 dil yapay zekâ taslağıdır; yayından önce anadili konuşan biri okumalı.
 
-The importer configures HQ compression, mipmaps, streaming mipmaps, anisotropic filtering, normal-map import type and linear mask-map color space. 4K textures do not by themselves guarantee photorealism or 4K frame-rate. The target GPU must be profiled; use High/Medium settings or lower output resolution on GPUs that cannot sustain UHD.
+Ayrıntılı liste: [`KNOWN_ISSUES.md`](KNOWN_ISSUES.md). Bu sürümde neyin değiştiği: [`CHANGES.md`](CHANGES.md).
 
-## Scenes and current gameplay systems
+## Sanal makinede test hakkında (önemli)
 
-- `MainMenu`: three save slots, new game and continue flow.
-- `ActI_MercifulRequiem`: galleon deck, hull, railings, sails, cabins, lantern, fuel, surgeon hook, five-bell sequence, cargo hatch and crate-ring interactions.
-- `ActII_ShipGraveyard`: wrecked hulls, narrow deck route, ocean surface, lantern-count bell sequence, Echo/Mimic route decision and crate ring.
-- `ActIII_ForsakenPort`: flooded street, building fronts, clock tower, Crane ledger and mirror-room decision.
-- `ActIV_SunkenTemple`: basalt nave, columns, mirrors, prism/lens pickups, underwater particles and leviathan movement.
-- `Endings_Resolution`: behavior-dependent Answer, Surface and Undertow ending tableaux.
+HDRP, compute shader destekleyen **gerçek bir DirectX 11/12 ekran kartı** ister. VirtualBox ve Hyper-V'nin varsayılan sanal ekran kartlarıyla oyun açılmaz, siyah ekranda kalır ya da hemen kapanır. Sanal makinede denemek için GPU paylaşımı/geçişi gerekir (Hyper-V GPU-P, Proxmox/VFIO gibi). En güvenilir test: gerçek bir Windows bilgisayar. Tahmini en az donanım (ölçülmedi): GTX 1060 / RX 580 sınıfı ekran kartı, 8 GB RAM.
 
-The included models are original procedural OBJ assets. They are suitable for this prototype but do not replace bespoke high-poly hero assets, detailed UV/material authoring, animation rigs, facial animation or professional environment art. The player is first-person; movement, camera sway, lantern motion, sails, floating debris, storm flashes and the leviathan have procedural motion. There are no animated humanoid NPCs in this build.
+## Projeyi açma
 
-## Controls
+1. Unity Hub'dan **Unity 6000.3.27f1** kur; "Windows Build Support (IL2CPP)" modülünü ekle.
+2. Unity Hub > **Add > Add project from disk** > `unity-project` klasörünü seç.
+3. İlk açılış birkaç dakika sürer (paketler indirilir, dokular içe aktarılır).
+4. Derleme bitince **kurulum kendiliğinden çalışır**: HDRP varlığını atar, sahneleri build listesine ekler, oyuncu ayarlarını (Linear renk, DX12 + DX11) yapar ve malzemeleri `Resources/Undertow/Materials` altına üretir. Çalışmazsa: **Undertow > Run Project Setup**.
+5. **Undertow > Open Scene > Main Menu** ile ana menüyü aç ve **Play**'e bas. Bölümleri tek tek denemek için `Open Scene > Act I…IV`.
+6. Sorun ararken: **Undertow > Validate Project** sahneleri, HDRP ayarını, yazı tiplerini, dokuları, malzemeleri, sesleri, 10 dilin anahtarlarını ve dört bölümün yürüyüşünü kontrol eder; sonucu Console'a yazar.
+7. İlk açılışta Unity yeni dosyalar için `.meta` dosyaları üretir; bunları da commit'le.
 
-- WASD: move
-- Mouse: look
-- E: interact
-- F: toggle lantern
-- Q or right mouse: listen
-- C or Left Ctrl: crouch
-- Shift: cautious movement
-- Esc: pause
+## Windows build
 
-## Validation and Windows build
+- Editörden: **Undertow > Build Windows 64-bit Release Player** → `Builds/Windows64/Release/UndertowEchoesOfVanessa.exe`
+- Geliştirme sürümü: **Undertow > Build Windows 64-bit Development Player**
+- Unity Build Automation: `DevOps/unity_build_automation.yaml` (giriş noktaları: `UndertowAssetImportQuality.ConfigureAllProjectAssets`, `UndertowHDRPSceneBuilder.BuildAllScenes`, `UndertowBatchValidator.ValidateAll`, `UndertowBatchValidator.BuildWindows64Release`).
 
-- **Undertow > Validate Project References & Build Readiness** checks scene hierarchies, imported OBJ meshes, 4K texture import settings and authored material maps.
-- **Window > General > Test Runner > EditMode** runs the NUnit suite for progression, puzzles, endings, save recovery, lantern and sanity systems.
-- **Undertow > Build Windows 64-bit Development Player** creates a diagnostic Windows build.
-- **Undertow > Build Windows 64-bit Release Player** creates the compressed release candidate under `Builds/Windows64/Release/`.
+## Oyunda neler var
 
-The automated DevOps configuration runs scene generation, EditMode tests, asset/hierarchy validation and the Windows Release build. No successful Unity compile, runtime walkthrough, visual QA, FPS result or EXE is claimed until those steps actually execute on a Unity 6 Windows-capable runner.
+- **Dünya:** Sahneler boş kabuktur; dört bölümün 3B dünyası oyun açılırken koddan kurulur (`WorldBuilder` → geometri, dekor, eşyalar, engeller, ışık). Kalyonun gövdesi, direkleri, top güvertesi, kamaraları; enkaz labirenti, kıyı, çadır, çan teknesi; 1724 limanı, saat kulesi, Vali'nin konağı, aynalı salon; batık tapınak, balina galerisi, sunak.
+- **Sistemler:** fener ve yağ, gizli akıl sağlığı (bulanıklık, fısıltı, kalp atışı, görmediğinde yer değiştiren eşyalar), dinleme ile yön bulma, Echo/Mimic sesleri, takılınca çocuğun sesiyle gelen ipuçları, kontrol noktalı kayıt (3 yuva), bölüm seçimi.
+- **Bulmacalar:** beş çan (La-Mi-Do-Mi-La), kasa/halka, fener sayısı–nota, üç kadran (11:40 · 03:17 · 06:05), dört ayna ışın yolu, sunak ve son seçim.
+- **Sonlar:** Cevap, Yüzey, Akıntı; ana menüde gizli dördüncü ninni.
+- **Ayarlar:** dil (anında değişir), altyazı boyutu/arka planı, konuşmacı adları, ses açıklamaları, yön okları, FOV (70–120°), kafa sallanması, ekran sarsıntısı, hareket bulanıklığı, akıl sağlığı efekt şiddeti, koş/eğil/dinle aç-kapa, mono ses, ses sınırlayıcı, tuş atama (klavye + kumanda), parlaklık ayar ekranı, ekran modu, çözünürlük, V-Sync, FPS sınırı, kalite, kenar yumuşatma, film greni, renk sapması, alan derinliği, sürüm numarası, **yayıncı modu** (dosya yolundaki kullanıcı adını gizler, ses tepelerini sınırlar).
+- **Fotoğraf modu:** zaman durur; FOV, yatış, pozlama, odak, 4 filtre; klavye ve kumanda; fotoğraflar `Resimler/Undertow` klasörüne.
+- **Ekstralar:** 28 başarım, çizim galerisi, görülen sonlar, müzik kutusu.
 
-## Important technical notes
+## Diller
 
-- Project uses the legacy Unity Input Manager for the current controller and keeps the Input System package available for future migration.
-- Campaign state is a persistent singleton independent of scene-local systems.
-- Puzzle completion, route decisions, drawings, player transform, lantern fuel and sanity are persisted; puzzle controllers restore solved states from campaign data on scene reload.
-- Act II requires a committed Echo or Mimic route before progression. Act III requires the canonical clock and a decision after the Crane ledger is found. Act IV requires mirror alignment, prism, lens and a lit lantern at the altar.
-- Save data uses three slots, SHA-256 payload verification, temporary-file writes and backup recovery.
-- HUD and menus use Unity IMGUI for a functional prototype and still need a final UI art pass.
-- Audio has procedural fallback systems. Recorded dialogue, licensed ambience/music and final FMOD banks are not included.
+`Assets/_Project/Resources/Undertow/Loc/<kod>.txt` — biçim: `anahtar = değer`, `\n` satır sonu, `#` yorum. İngilizce kaynak metin; diğer diller anahtar bazında İngilizceye düşer (ama hepsi şu an eksiksiz).
+
+| Dil | Durum |
+|---|---|
+| English, Türkçe | Tam, elden yazıldı |
+| Deutsch, Français, Español (Latinoamérica), Português (Brasil), Русский, 简体中文, 日本語, 한국어 | Tam ama **yapay zekâ taslağı** — anadili konuşan biri okumalı |
+
+Çince, Japonca ve Korece için Windows'un kendi yazı tipleri kullanılır (Microsoft YaHei, Yu Gothic, Malgun Gothic).
+
+## Klasörler
+
+```
+Assets/_Project/
+  Scripts/Logic/     saf C#: içerik (4 bölüm), bulmacalar, akıl sağlığı, fener, sonlar, kayıt, yerelleştirme tablosu
+  Scripts/Runtime/   Unity: dünya kurucu, oyuncu, ses, arayüz, sahne akışı
+  Scripts/Editor/    kurulum, doğrulama, build, içe aktarma ayarları
+  Tests/EditMode/    mantık + yerelleştirme testleri
+  Resources/Undertow/  Audio (OGG), Textures (JPG), Fonts (OFL), Loc (10 dil), UI
+  Scenes/            6 boş sahne kabuğu (dünya koddan kurulur)
+```
+
+`Resources/Undertow` içindeki dosyalar Git LFS'e girmez (iç içe `.gitattributes`); taze bir klondan oyun LFS indirmeden derlenir.
+
+## Eski teslim belgeleri
+
+`README_DELIVERY.md`, `DELIVERY_AUDIT.md`, `SHA256_MANIFEST.json` ve `Docs/` altındakiler 18 Kasım 2026 tarihli önceki teslimi (Unity 6000.0.23f1) anlatır; tarih kaydı olarak duruyor, güncel talimatlar bu dosyadadır.
+
+## Lisanslar
+
+Yazı tipleri SIL Open Font License 1.1 ile: [`THIRD_PARTY_NOTICES.md`](THIRD_PARTY_NOTICES.md). Müzik, ses efektleri, dokular ve metinler bu oyun için üretildi.

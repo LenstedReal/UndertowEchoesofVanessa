@@ -1,5 +1,7 @@
 # Delivery audit — 2026-11-18
 
+> **Historical record** of the previous delivery. For v0.3.0 (Unity 6000.3.27f1) see `README.md`, `CHANGES.md` and `KNOWN_ISSUES.md`.
+
 ## Included in this archive
 - Unity 6000.0.23f1 project structure and HDRP 17.0.3 package manifest.
 - 40 C# scripts across player, lantern, audio, puzzles, narrative, save, UI, world and editor tooling.

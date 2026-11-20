@@ -2,9 +2,11 @@
   "name": "Undertow.Editor",
   "rootNamespace": "Undertow.Editor",
   "references": [
+    "Undertow.Logic",
     "Undertow.Runtime",
     "Unity.RenderPipelines.Core.Runtime",
-    "Unity.RenderPipelines.HighDefinition.Runtime"
+    "Unity.RenderPipelines.HighDefinition.Runtime",
+    "Unity.InputSystem"
   ],
   "includePlatforms": [
     "Editor"

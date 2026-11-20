@@ -1,5 +1,7 @@
 # UNDERTOW: ECHOES OF VANESSA — Unity HDRP project
 
+> **Historical record.** This file describes the 18 November 2026 delivery (Unity 6000.0.23f1, HDRP 17.0.3). The current project is v0.3.0 on Unity 6000.3.27f1; see `README.md`, `CHANGES.md` and `KNOWN_ISSUES.md`.
+
 ## Engine
 - Unity Editor: 6000.0.23f1
 - Render pipeline: HDRP 17.0.3

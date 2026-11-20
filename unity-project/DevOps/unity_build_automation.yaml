@@ -1,16 +1,16 @@
 name: Undertow Unity 6 HDRP Windows x64 Release Candidate
 targetPlatform: StandaloneWindows64
-unityVersion: 6000.0.23f1
+unityVersion: 6000.3.27f1
 gitLfs: true
 steps:
-  - name: Configure 4K Texture and Mesh Importers
+  - name: Configure Texture Importers and Bake HDRP Materials
     executeMethod: Undertow.Editor.UndertowAssetImportQuality.ConfigureAllProjectAssets
-  - name: Generate Canonical Scenes and HDRP Materials
+  - name: Write Scene Shells and Project Setup (HDRP asset, build list)
     executeMethod: Undertow.Editor.UndertowHDRPSceneBuilder.BuildAllScenes
   - name: Run Automated EditMode NUnit QA Suite
     testPlatform: EditMode
     resultsPath: Logs/EditModeTestResults.xml
-  - name: Validate 4K Assets, Material Maps and Scene Hierarchies
+  - name: Validate Content, Localisation, Assets and Level Walkthroughs
     executeMethod: Undertow.Editor.UndertowBatchValidator.ValidateAll
   - name: Build Windows 64-bit Release Candidate
     executeMethod: Undertow.Editor.UndertowBatchValidator.BuildWindows64Release

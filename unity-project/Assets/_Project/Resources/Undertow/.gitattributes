@@ -1,0 +1,7 @@
+# Generated game assets (audio, textures, fonts, localisation) are kept in plain Git, not LFS,
+# so a fresh clone builds the game without downloading any LFS objects.
+# Everything here is small: ~136 short OGG clips, JPG textures, OFL fonts and text tables.
+*.ogg -filter binary
+*.jpg binary
+*.ttf binary
+*.txt text eol=lf

@@ -11,8 +11,8 @@ PlayerSettings:
   fullscreenMode: 1
   m_ActiveColorSpace: 1
   m_MTRendering: 1
-  activeInputHandler: 0
-  bundleVersion: 0.2.0
+  activeInputHandler: 2
+  bundleVersion: 0.3.0
   metroPackageName: UndertowEchoesOfVanessa
   scriptingBackend:
     Standalone: 1
