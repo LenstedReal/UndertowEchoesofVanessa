@@ -1,5 +1,7 @@
 # Asset Provenance & Licensing Ledger — Undertow: Echoes of Vanessa
 
+> **Historical record.** The meshes, PBR maps and materials described here were removed from the working tree on 20 November 2026 because v0.3.0 no longer uses them. They remain in git history (commit `08d09c2` and earlier).
+
 The OBJ meshes and PBR maps in this archive are locally generated procedural assets for the Undertow project. No third-party marketplace packs or intentionally imported copyrighted image samples are included in these generated files. The project owner must retain source files and assign commercial distribution rights explicitly before release; this ledger does not grant MIT, CC0 or another open-source license.
 
 ## 1. Procedural 3D meshes

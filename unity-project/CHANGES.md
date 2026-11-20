@@ -1,5 +1,14 @@
 # Değişiklikler
 
+## Depo temizliği — 20 Kasım 2026
+
+Oyun koduna, sürüm bilgilerine ve `.md` belgelerine dokunulmadı. Silinenlerin hepsi git geçmişinde duruyor.
+
+- Oyunun hiçbir yerde kullanmadığı eski sanat dosyaları kaldırıldı: 18 adet 4K PNG doku (359 MB, Git LFS), 10 OBJ model, 5 eski malzeme. Kodda, sahnelerde ve ayarlarda bunlara tek bir bağlantı yoktu. Taze bir klon artık 359 MB indirmez, Unity'nin ilk açılışı kısalır.
+- Birebir aynı kopyalar kaldırıldı: Grok ana talimatının iki `.txt` kopyası (aslı `.md` duruyor), `UNDERTOW_GROK_MASTER_PROMPT_PACK_TR-2.zip`, `AbyssalRequiem_UnityAI_Pack.zip` (aynısı `AbyssalRequiem_Grok_MobileFirst_Pack.zip` içinde), `artifacts/` içindeki iki görsel (aynıları `public/` içinde).
+- Önceki teslimin artık var olmayan dosyaları gösteren iki SHA-256 listesi kaldırıldı.
+- Tarayıcı prototipi (src, public, server, scripts, .grok, .vercel) olduğu gibi duruyor.
+
 ## 0.3.0 — 20 Kasım 2026
 
 Önceki sürüm (`db30c12`, Unity 6000.0.23f1) üzerine yeniden yapım. Onaylanan plana göre.

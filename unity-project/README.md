@@ -86,7 +86,7 @@ Assets/_Project/
 
 ## Eski teslim belgeleri
 
-`README_DELIVERY.md`, `DELIVERY_AUDIT.md`, `SHA256_MANIFEST.json` ve `Docs/` altındakiler 18 Kasım 2026 tarihli önceki teslimi (Unity 6000.0.23f1) anlatır; tarih kaydı olarak duruyor, güncel talimatlar bu dosyadadır.
+`README_DELIVERY.md`, `DELIVERY_AUDIT.md` ve `Docs/` altındakiler 18 Kasım 2026 tarihli önceki teslimi (Unity 6000.0.23f1) anlatır; tarih kaydı olarak duruyor, güncel talimatlar bu dosyadadır.
 
 ## Lisanslar
 

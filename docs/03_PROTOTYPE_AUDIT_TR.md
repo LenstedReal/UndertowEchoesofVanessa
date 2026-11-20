@@ -39,7 +39,7 @@ Kanon sırası: `01_STORY_BIBLE.md` > `02_GAME_DESIGN_AND_TODO.md` > prototip me
 
 ## 4. Depo düzeni (hiçbir şey silinmedi, öneri)
 
-- `attachments/UNDERTOW_GROK_MASTER_PROMPT_TR.md`, `.txt` ve `-2.txt` **aynı dosya** (3 kopya). `..._PACK_TR.zip` ve `..._PACK_TR-2.zip` de aynı. Birer kopya yeterli; istersen sonra temizleriz.
+- `attachments/UNDERTOW_GROK_MASTER_PROMPT_TR.md`, `.txt` ve `-2.txt` **aynı dosya** (3 kopya). `..._PACK_TR.zip` ve `..._PACK_TR-2.zip` de aynı. Birer kopya yeterli; istersen sonra temizleriz. **20 Kasım 2026: kopyalar silindi.**
 - `AbyssalRequiem_*.zip` eski çalışma adı. Arşiv olarak kalabilir.
 - `.vercel/output/` (37 dosya) derleme çıktısı. Vercel'e bu depodan yayın yapılmıyorsa `.gitignore`'a eklenebilir.
 - `.grok/`, `AGENTS.md`, `startup.sh`: Grok çalışma alanı dosyaları; prototipi Grok'ta açmak için gerekli, dokunulmuyor.

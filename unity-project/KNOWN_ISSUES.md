@@ -26,7 +26,7 @@ Bu liste, yapılmamış ya da burada doğrulanamamış her şeyi açıkça yazar
 
 ## Depo
 
-14. `Assets/_Project/Textures` (18 adet 4K PNG) ve `Assets/_Project/Art/Meshes` (OBJ) önceki sürümden kalma Git LFS dosyalarıdır; yeni dünya kurucu bunları kullanmaz. Silinmedi; istersen ileride kaldırılabilir (ilk açılışta içe aktarma süresini uzatırlar).
-15. `SHA256_MANIFEST.json`, `Docs/SHA256_MANIFEST.txt`, `README_DELIVERY.md`, `DELIVERY_AUDIT.md` önceki teslimi anlatır; bu sürümün dosyalarıyla eşleşmez.
+14. Önceki sürümden kalan, oyunun hiçbir yerde kullanmadığı 18 adet 4K PNG doku (359 MB, Git LFS), 10 OBJ model ve 5 eski malzeme depodan kaldırıldı. Git geçmişinde (`08d09c2` ve öncesi) duruyorlar; gerekirse geri getirilebilir.
+15. `README_DELIVERY.md`, `DELIVERY_AUDIT.md` ve `Docs/` altındaki belgeler önceki teslimi anlatır (tarih kaydı). O teslimin SHA-256 listeleri artık var olmayan dosyaları gösterdiği için kaldırıldı.
 16. Yeni klasör ve dosyaların `.meta` dosyaları yok; Unity ilk açılışta üretir. Onları da commit'lemek gerekir.
 17. Eski kod (40 betik), eski prefab'lar, eski JSON yerelleştirme ve eski test dosyası yeni mimariyle değiştirildi; git geçmişinde (`db30c12`) duruyorlar.
