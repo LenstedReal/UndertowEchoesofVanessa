@@ -1,4 +1,4 @@
-# Undertow: Echoes of Vanessa — Unity 6 HDRP (v0.3.0)
+# Undertow: Echoes of Vanessa — Unity 6 HDRP (v0.3.1)
 
 Birinci şahıs, hikâye odaklı psikolojik korku oyunu. Dört bölüm (Lanetli Kalyon, Gemi Mezarlığı, Terk Edilmiş Liman, Batık Tapınak), üç son, on dil.
 
@@ -8,7 +8,7 @@ Birinci şahıs, hikâye odaklı psikolojik korku oyunu. Dört bölüm (Lanetli 
 | Render pipeline | HDRP **17.3.0** (core, shadergraph, vfx 17.3.0) |
 | Input | Input System 1.11.2 (yalnızca yeni sistem) |
 | Hedef | Windows x86-64, DirectX 12 / DirectX 11 |
-| Sürüm | `bundleVersion` 0.3.0 |
+| Sürüm | `bundleVersion` 0.3.1 |
 
 ## Durum — dürüst özet
 
@@ -22,7 +22,7 @@ Birinci şahıs, hikâye odaklı psikolojik korku oyunu. Dört bölüm (Lanetli 
 
 **Yapılmadı / burada yapılamaz**
 
-- Proje **Unity Editor'de açılmadı, Play'e basılmadı, Windows build'i alınmadı.** Bu ortamda Unity ve GPU yok. İlk açılışta hata çıkarsa bana tam metniyle gönder.
+- Proje **Unity Editor'de açılmadı.** Bu ortamda Unity ve GPU yok. 0.3.0'ın Unity Build Automation build'i bulut bilgisayarda açıldı, oyun ve sesler çalıştı ama ekran pembe kaldı; 0.3.1 bunu düzeltir, yeni build'le henüz denenmedi. Hata çıkarsa bana tam metniyle gönder.
 - Performans, görüntü kalitesi ve ses karışımı gerçek donanımda ölçülmedi.
 - Seslendirme yok: konuşmalar şimdilik geçici "mırıltı" sesleri + altyazı. Müzik ve efektler oyun için üretildi (telifsiz, özgün).
 - Türkçe dışındaki 8 dil yapay zekâ taslağıdır; yayından önce anadili konuşan biri okumalı.
@@ -47,7 +47,8 @@ HDRP, compute shader destekleyen **gerçek bir DirectX 11/12 ekran kartı** iste
 
 - Editörden: **Undertow > Build Windows 64-bit Release Player** → `Builds/Windows64/Release/UndertowEchoesOfVanessa.exe`
 - Geliştirme sürümü: **Undertow > Build Windows 64-bit Development Player**
-- Unity Build Automation: `DevOps/unity_build_automation.yaml` (giriş noktaları: `UndertowAssetImportQuality.ConfigureAllProjectAssets`, `UndertowHDRPSceneBuilder.BuildAllScenes`, `UndertowBatchValidator.ValidateAll`, `UndertowBatchValidator.BuildWindows64Release`).
+- **Unity Build Automation:** panelde ek ayar gerekmez. Her build'den önce `UndertowBuildPreprocess` çalışır: malzemeleri `Resources/Undertow/Materials` altına üretir ve `UI/Default` shader'ını build'e ekler. Bu adım olmadan build açılır ama her şey pembe görünür (0.3.0'da olan buydu). Çıkan exe'nin adı build hedefinin adıdır (ör. `Undertow Windows 64.exe`); ZIP'teki `*_BurstDebugInformation_DoNotShip` ve `*_BackUpThisFolder_ButDontShipItWithYourGame` klasörleri oyuna gerekmez, Steam'e yüklenmez.
+- `DevOps/unity_build_automation.yaml` yalnızca adımların açıklamasıdır; Build Automation bu dosyayı okumaz. Komut satırı giriş noktaları: `UndertowAssetImportQuality.ConfigureAllProjectAssets`, `UndertowHDRPSceneBuilder.BuildAllScenes`, `UndertowBatchValidator.ValidateAll`, `UndertowBatchValidator.BuildWindows64Release`.
 
 ## Oyunda neler var
 

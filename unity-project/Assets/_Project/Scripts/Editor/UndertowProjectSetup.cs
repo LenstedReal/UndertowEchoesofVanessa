@@ -17,10 +17,18 @@ namespace Undertow.Editor
     [InitializeOnLoad]
     public static class UndertowProjectSetup
     {
-        public const int Version = 3;
+        public const int Version = 4;
         public const string HdrpPath = "Assets/_Project/Settings/HDRP/UndertowHDRPAsset_PC_Ultra.asset";
         public const string MaterialRoot = "Assets/_Project/Resources/Undertow/Materials";
         public const string TextureRoot = "Assets/_Project/Resources/Undertow/Textures";
+        const string HdrpLitPath = "Packages/com.unity.render-pipelines.high-definition/Runtime/Material/Lit/Lit.shader";
+        const string HdrpUnlitPath = "Packages/com.unity.render-pipelines.high-definition/Runtime/Material/Unlit/Unlit.shader";
+
+        /// <summary>
+        /// Built-in shaders the player needs although no asset in the build references them:
+        /// all UI is created from code, so nothing pulls UI/Default in and runtime-built UI would draw magenta.
+        /// </summary>
+        public static readonly string[] AlwaysIncludedShaders = { "UI/Default", "Sprites/Default" };
         static readonly string PrefKey = "Undertow.SetupVersion." + Application.dataPath.GetHashCode();
         static int _tries;
 
@@ -67,6 +75,7 @@ namespace Undertow.Editor
             EnsurePipeline();
             EnsureBuildScenes();
             EnsurePlayerSettings();
+            EnsureAlwaysIncludedShaders();
             int mats = BakeMaterials();
             EditorPrefs.SetInt(PrefKey, Version);
             AssetDatabase.SaveAssets();
@@ -127,11 +136,64 @@ namespace Undertow.Editor
             PlayerSettings.SetApiCompatibilityLevel(NamedBuildTarget.Standalone, ApiCompatibilityLevel.NET_Standard);
         }
 
+        /// <summary>
+        /// Adds <see cref="AlwaysIncludedShaders"/> to Graphics > Always Included Shaders when missing.
+        /// Returns how many were added.
+        /// </summary>
+        public static int EnsureAlwaysIncludedShaders()
+        {
+            var settings = AssetDatabase.LoadAssetAtPath<GraphicsSettings>("ProjectSettings/GraphicsSettings.asset");
+            if (settings == null)
+            {
+                Debug.LogWarning("[Undertow] ProjectSettings/GraphicsSettings.asset could not be loaded; Always Included Shaders not checked.");
+                return 0;
+            }
+            var so = new SerializedObject(settings);
+            var list = so.FindProperty("m_AlwaysIncludedShaders");
+            if (list == null || !list.isArray)
+            {
+                Debug.LogWarning("[Undertow] m_AlwaysIncludedShaders not found in GraphicsSettings; Always Included Shaders not checked.");
+                return 0;
+            }
+            int added = 0;
+            foreach (var name in AlwaysIncludedShaders)
+            {
+                var shader = Shader.Find(name);
+                if (shader == null)
+                {
+                    Debug.LogWarning("[Undertow] built-in shader '" + name + "' not found.");
+                    continue;
+                }
+                bool present = false;
+                for (int i = 0; i < list.arraySize && !present; i++)
+                    present = list.GetArrayElementAtIndex(i).objectReferenceValue == shader;
+                if (present) continue;
+                int at = list.arraySize;
+                list.InsertArrayElementAtIndex(at);
+                list.GetArrayElementAtIndex(at).objectReferenceValue = shader;
+                added++;
+            }
+            if (added > 0)
+            {
+                so.ApplyModifiedPropertiesWithoutUndo();
+                AssetDatabase.SaveAssets();
+                Debug.Log("[Undertow] added " + added + " shader(s) to Always Included Shaders.");
+            }
+            return added;
+        }
+
+        static Shader FindShader(string name, string packagePath)
+        {
+            var s = Shader.Find(name);
+            if (s == null) s = AssetDatabase.LoadAssetAtPath<Shader>(packagePath);
+            return s;
+        }
+
         /// <summary>Creates or updates one .mat per MatLib definition.</summary>
         public static int BakeMaterials()
         {
-            var lit = Shader.Find("HDRP/Lit");
-            var unlit = Shader.Find("HDRP/Unlit");
+            var lit = FindShader("HDRP/Lit", HdrpLitPath);
+            var unlit = FindShader("HDRP/Unlit", HdrpUnlitPath);
             if (lit == null || unlit == null)
             {
                 Debug.LogWarning("[Undertow] HDRP shaders not ready yet; materials will be baked on the next setup run.");

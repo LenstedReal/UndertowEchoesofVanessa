@@ -12,7 +12,7 @@ PlayerSettings:
   m_ActiveColorSpace: 1
   m_MTRendering: 1
   activeInputHandler: 2
-  bundleVersion: 0.3.0
+  bundleVersion: 0.3.1
   metroPackageName: UndertowEchoesOfVanessa
   scriptingBackend:
     Standalone: 1

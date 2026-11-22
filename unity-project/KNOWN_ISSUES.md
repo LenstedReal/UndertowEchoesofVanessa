@@ -1,13 +1,19 @@
-# Bilinen durumlar ve sınırlar — v0.3.0 (20 Kasım 2026)
+# Bilinen durumlar ve sınırlar — v0.3.1 (22 Kasım 2026)
 
 Bu liste, yapılmamış ya da burada doğrulanamamış her şeyi açıkça yazar.
 
+## İlk gerçek test (0.3.0, 22 Kasım 2026)
+
+- Unity Build Automation 0.3.0'ı gerçek Unity'de hatasız derledi ve Windows build'i çıkardı (#4).
+- Build bulut bilgisayarda (AirGPU, NVIDIA L4, Windows Server 2025) açıldı: oyun çalıştı, sesler geldi, **ama ekran tamamen pembeydi.** Sebep ve düzeltme `CHANGES.md` → 0.3.1'de.
+- **0.3.1 düzeltmesi henüz yeni bir build'le denenmedi.**
+
 ## Doğrulanmadı
 
-1. **Unity Editor'de hiç açılmadı.** Kod, Unity 6000.3.27f1 / HDRP 17.3.0 / Input System 1.11.2 / uGUI kaynak kodundan üretilmiş API taslaklarına karşı derlendi (0 hata, 0 uyarı). Bu, imzaların doğru olduğunu gösterir; Unity'nin çalışma anındaki davranışını, serileştirmeyi veya shader derlemesini kanıtlamaz.
+1. **Unity Editor'de hiç açılmadı.** Kod, Unity 6000.3.27f1 / HDRP 17.3.0 / Input System 1.11.2 / uGUI kaynak kodundan üretilmiş API taslaklarına karşı derlendi (0 hata, 0 uyarı). 0.3.0'ı Build Automation da gerçek Unity'de derledi. Bu, kodun derlendiğini gösterir; çalışma anındaki davranışı ve shader derlemesini tek başına kanıtlamaz.
 2. **Oynanmadı.** Dört bölüm mantık katmanında baştan sona yürütüldü (`runlogic walk`); 3B dünyada yürünerek, gerçek ışık ve sesle denenmedi. Bir odada duvar içinde kalma, karanlık köşe, yanlış yöne bakan eşya gibi sorunlar ilk testte çıkabilir.
 3. **Testler Unity'de koşmadı.** 52 test .NET 8 üzerinde kendi küçük NUnit uyumlu koşucumla geçti. Unity Test Runner'da (Mono) da aynı sonucu vermeleri beklenir ama denenmedi.
-4. **Windows build'i alınmadı**, exe çalıştırılmadı, Steam'e yüklenmedi.
+4. **Oynanabilir bir Windows build'i henüz görülmedi.** 0.3.0 build'i açıldı ama pembe ekranda kaldı; 0.3.1 build'i alınmadı. Steam'e yüklenmedi.
 5. **Performans ölçülmedi.** Kare hızı, bellek, yükleme süreleri bilinmiyor. Işık değerleri (sabit pozlama EV100 ≈ 2, fener 560 lümen, ay ışığı) hesapla ayarlandı, gözle değil; ilk testte fazla karanlık ya da parlak gelebilir. Oyundaki parlaklık ayar ekranı bunun için var.
 
 ## Donanım

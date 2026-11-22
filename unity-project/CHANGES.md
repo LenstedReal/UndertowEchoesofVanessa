@@ -1,5 +1,16 @@
 # Değişiklikler
 
+## 0.3.1 — 22 Kasım 2026
+
+İlk gerçek test: 0.3.0'ın Unity Build Automation build'i (#4) bulut bilgisayarda (NVIDIA L4, Windows Server 2025) açıldı. Oyun çalıştı, sesler geldi, ama ekran baştan sona pembe kaldı.
+
+- **Sebep:** Build Automation, Unity'yi batch modda çalıştırır; projeyi açınca kendiliğinden çalışan kurulum bu modda atlanıyordu. Malzeme kütüphanesi `Resources` altına üretilmediği için HDRP Lit/Unlit shader'ları build'e girmedi. Ayrıca arayüzün tamamı koddan kurulduğu için `UI/Default` shader'ına build'de hiçbir şey bağlanmıyordu. Shader'ı bulamayan her şey Unity'nin hata rengiyle (pembe) çiziliyor.
+- **Düzeltme:** Yeni `UndertowBuildPreprocess`, Build Automation dahil her build'den önce çalışır: malzemeleri üretir ve `UI/Default` ile `Sprites/Default`'u Always Included Shaders listesine ekler. Malzeme üretilemezse build pembe bir oyun çıkarmak yerine açık bir hata mesajıyla durur.
+- `GraphicsSettings.asset` dosyasına Always Included Shaders listesi eklendi.
+- HDRP shader'ları adla bulunamazsa paket yolundan yüklenir.
+- Build Automation panelinde ek ayar gerekmez.
+- Sürüm 0.3.1. Sağ alttaki sürüm yazısından yeni build'i ayırt edebilirsin.
+
 ## Depo temizliği — 20 Kasım 2026
 
 Oyun koduna, sürüm bilgilerine ve oyunun `.md` belgelerine dokunulmadı. Silinenlerin hepsi git geçmişinde duruyor.
