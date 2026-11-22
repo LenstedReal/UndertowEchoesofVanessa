@@ -1,5 +1,53 @@
 # Değişiklikler
 
+## 0.3.3 — 22 Kasım 2026
+
+Klavye + fareye dönüş ve kapsamlı hata taraması. Oyunun kendi kodu, Unity'nin yerine geçen başsız (ekransız) bir benzetimde baştan sona çalıştırıldı: açılış, bütün menüler, dört bölüm, üç son, kayıt/yükleme, klavye-fare kontrolleri. Bulunan hatalar aşağıda. **Gerçek Unity'de ve gerçek ekran kartında bu sürüm henüz denenmedi** (bkz. `KNOWN_ISSUES.md`).
+
+### Kontroller
+- **Dokunmatik test tuşları kaldırıldı.** Oyun yine klavye + fare (WASD / ok tuşları, fare ile bakış) ve kumanda ile oynanır. Dokunmatik tuşlar gerekirse git geçmişinde: `495d24a`.
+- 0.3.2'nin tıklanabilir menüleri kaldı (parlaklık ekranındaki `<` `>` Onayla, menülerde "Geri").
+- Tuş atarken Esc ile vazgeçince Ayarlar ekranı da kapanıyordu; artık yalnızca atama iptal olur.
+- Uzun listelerde (Ayarlar, Başarımlar) fare tekerleği çalışmıyordu: liste her karede seçili satıra geri kayıyordu. Artık liste yalnızca klavye/kumanda ile gezinince seçimi izler.
+- Act I'in başında yürüme / kullanma / günlük tuşlarını gösteren kısa ipucu eklendi (10 dilde).
+
+### Oynanışı kilitleyen ya da bozan hatalar
+- **Top güvertesine inen merdiven:** zemin çarpıştırıcıları olması gerekenden kalındı, oyuncunun başı güverte kenarına takılıyordu. Kat döşemeleri seviye derleyicisinin varsaydığı kalınlığa (0,3 m) indirildi.
+- **Vanessa'nın kamarasının kapısı** yanlış katta kuruluyordu: kamara baştan açıktı, ön güvertede ise boşta duran bir kapı ve görünmez bir duvar vardı. Engeller artık kendi kapı aralığının zeminine kurulur.
+- **Bölüm sonu:** bölümü bitiren olay iki kez tetiklenebiliyor, geçiş kararmasında oyun takılabiliyordu. Bölüm bitişi tek seferlik yapıldı; kararma artık durdurulan bir işleme bağlı değil, takılamaz.
+- **Bakışı çeviren sahneler** (ör. "şuraya bak" anları) bir işlem kesilirse oyuncunun kontrolünü geri vermeyebiliyordu; kilit her durumda açılır.
+- **Fener doluyken yağ şişesi:** şişe alınamıyor, ona bağlı hedef de ilerlemiyordu. Şişe yerinde kalır, hedef tamamlanır.
+- **Act II sandık bulmacası** kayıttan yüklenince yanlış anahtarla eşitleniyordu (`a2c` → `a2x`).
+- **Son sahneler:** kamera kayması oyunun toplam çalışma süresine bağlıydı; uzun bir oturumdan sonra Cevap ve Akıntı sonlarında kamera yüzlerce metre öteye gidebiliyordu.
+- **Menü müziği** bölümlere taşıyordu; sahne değişirken kararmayla birlikte söner.
+
+### Görüntü
+- **Işık şiddeti:** nokta ve spot ışıklar lümen olarak yazılıyordu, HDRP 17 ise bu değeri kandela olarak okur; ışıklar tasarlanandan ~12,5 kat parlaktı. Dönüşüm eklendi. Sahneler 0.3.2'ye göre **belirgin biçimde daha karanlık** (tasarlandığı gibi: fener yakını aydınlatır, 5 m ötesi neredeyse siyah). Fazla karanlık gelirse Ayarlar → Görüntü → Parlaklık.
+- **Ana menüde üst üste binen görüntü:** arka plan sahnesi ile menü görseli aynı anda çiziliyordu; menü artık yalnızca 3B sahneyi kullanır.
+- **Açılış sırası:** dil / uyarı / parlaklık ekranları arasında menünün arka planı bir an görünüyordu. İlk açılış ekranlarının arkasında siyah perde var; menü yalnızca stüdyo kartından sonra gelir.
+- **Boru biçimli modeller** (halatlar, lomboz halkaları, teyp sapı) yön değiştirince çöküyor ya da siyah yüzey veriyordu; kesit artık yol boyunca taşınıyor.
+- **Kol (lever)** çekilince hiçbir şey görünmüyordu (kolun modeli yoktu); taban ve kol eklendi. Çan, ayna, sandık, kapak ve kadran hareketleri üst üste tetiklenince kaymıyor.
+- **Farklı ekran oranları:** arayüz 4:3, 5:4, 16:10, 21:9 ekranlarda kesilmiyor (tuval artık her yönde en az 1920×1080). Menü gölgeleri ekran yüksekliğine uzar.
+- **Kapalı mekânlar:** kamaraların ve ambarın kendi ortam ışığı ve sis ayarı kameraya hiç uygulanmıyordu (kamera o katmanı okumuyordu); içeriler açık güverte kadar aydınlık kalıyordu. Artık uygulanır.
+- Hikâyede fenerin söndüğü anda alev gerçekten söner (önceden bir sonraki karede geri yanıyordu).
+- Fotoğraf modunda sürüm yazısı fotoğrafa girmez.
+- Kalite ayarı bölüm ortasında değişince var olan ışıkların gölgeleri de yeni ayara geçer (önceden bölüm yeniden yüklenene kadar eski kalıyordu).
+
+### Eski bilgisayarlar için
+- **İlk açılışta kalite, ekran kartına göre seçilir:** 1,8 GB'tan az görüntü belleği ya da 7 GB'tan az RAM → Düşük; 3,5 GB'tan az → Orta; diğerleri → Yüksek. Ayarlardan değiştirilebilir.
+- **F3:** gizli tanı paneli (kare hızı, ekran kartı ve belleği, çözünürlük, kalite, sahne/oda/konum, son hata). Sorun bildirirken bu panelin fotoğrafı yeterli.
+- **Hata ekranı:** bir bölüm kurulurken hata olursa siyah ekranda kalmak yerine sebebi yazan bir ekran çıkar; ana menüye dönülür ya da oyundan çıkılır. Kayıtlar etkilenmez.
+
+### Diğer
+- Ses motorunda `Start` adlı parametreli bir yöntem Unity'de her açılışta "Script error" uyarısı verirdi; adı değişti.
+- Sürüm 0.3.3. Yerelleştirme: 10 dilin her birinde 689 anahtar.
+
+### Bu sürümde ne çalıştırıldı
+- Derleme kapısı (oyun ve editör yapılandırması): 0 hata, 0 uyarı.
+- Mantık testleri: 53/53.
+- Başsız benzetim: 6 senaryo, **201 kontrol, hepsi geçti** — açılış sırası; bütün menüler ve ayar sekmeleri; dört bölümün dünyasının kurulması (ağ ve çarpıştırıcı denetimi); Yeni Oyun'dan jeneriğe üç tam oynanış (üç son); 4:3 / 5:4 / 16:10 / 21:9 ve 10 dilde taşma denetimi; WASD, ok tuşları, fare, koşma, eğilme, fener, dinleme, günlük, duraklatma, fotoğraf modu, kayıt ve Devam Et; bir bölümün kurulurken bilerek bozulması (hata ekranı ve ana menüye dönüş).
+- Benzetim Unity değildir: görüntü, ışık, ses karışımı ve kare hızı **ölçülmedi**.
+
 ## 0.3.2 — 22 Kasım 2026
 
 0.3.1 bulut bilgisayarda açıldı: görüntü doğru (pembe ekran gitti), sürüm v0.3.1. Ama oyun telefondan Moonlight ile oynanırken ilerlenemedi: Moonlight'ın ekran kolu bu makinede Windows'a ulaşmıyor, dokunmalar oyuna yalnızca fare tıklaması olarak geliyor.

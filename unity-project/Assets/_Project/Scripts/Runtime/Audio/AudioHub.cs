@@ -136,7 +136,7 @@ namespace Undertow
             _free.Push(v.Source);
         }
 
-        Voice Start(string id, Bus bus, float volume, float pitch, bool loop, bool important)
+        Voice StartVoice(string id, Bus bus, float volume, float pitch, bool loop, bool important)
         {
             var clip = Clip(id);
             if (clip == null) return null;
@@ -153,7 +153,7 @@ namespace Undertow
 
         public AudioSource Play2D(string id, Bus bus = Bus.Effects, float volume = 1f, float pitch = 1f)
         {
-            var v = Start(id, bus, volume, pitch, false, bus == Bus.Voice);
+            var v = StartVoice(id, bus, volume, pitch, false, bus == Bus.Voice);
             if (v == null) return null;
             v.Source.Play();
             return v.Source;
@@ -161,7 +161,7 @@ namespace Undertow
 
         public AudioSource PlayAt(string id, Vector3 pos, Bus bus = Bus.Effects, float volume = 1f, float pitch = 1f, float minDist = 1.2f, float maxDist = 28f, bool important = false)
         {
-            var v = Start(id, bus, volume, pitch, false, important);
+            var v = StartVoice(id, bus, volume, pitch, false, important);
             if (v == null) return null;
             Place(v.Source, pos, minDist, maxDist);
             v.Source.Play();
@@ -171,7 +171,7 @@ namespace Undertow
         /// <summary>Looping 3D source that follows a transform. Stop it with Stop().</summary>
         public AudioSource Loop(string id, Transform follow, Bus bus = Bus.Effects, float volume = 1f, float minDist = 1.5f, float maxDist = 30f, bool important = false)
         {
-            var v = Start(id, bus, volume, 1f, true, important);
+            var v = StartVoice(id, bus, volume, 1f, true, important);
             if (v == null) return null;
             v.Source.transform.SetParent(follow, false);
             v.Source.transform.localPosition = Vector3.zero;

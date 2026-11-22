@@ -36,6 +36,9 @@ namespace Undertow
     /// <summary>Builds floors, stairs, ceilings, walls, railings and door frames from a CompiledLevel.</summary>
     public static class GeometryBuilder
     {
+        /// <summary>Floor and stair collider thickness. Must stay within LevelCompiler.Clear minus the player's height.</summary>
+        public const float FloorThickness = 0.3f;
+
         public static void Build(Kit kit, CompiledLevel lv, LevelStyle st)
         {
             foreach (var f in lv.Floors) Floor(kit, f, st);
@@ -56,7 +59,9 @@ namespace Undertow
             {
                 // rotated a quarter turn so the planks of a floor run along +z (fore and aft on the ship)
                 if (st.FloorVisible(f.Room)) kit.Box(ch, mat, new Vector3(r.X + r.W * 0.5f, f.Y0 - 0.15f, r.Z + r.D * 0.5f), new Vector3(r.D, 0.3f, r.W), Quaternion.Euler(0f, 90f, 0f), false, 63, 2f);
-                kit.Collider(new Vector3(r.X + r.W * 0.5f, f.Y0 - 0.3f, r.Z + r.D * 0.5f), new Vector3(r.W, 0.6f, r.D));
+                // As thick as the planks and no thicker: the level compiler cuts stair wells so that a floor of
+                // this thickness leaves standing headroom. A deeper collider would catch the head on the way down.
+                kit.Collider(new Vector3(r.X + r.W * 0.5f, f.Y0 - FloorThickness * 0.5f, r.Z + r.D * 0.5f), new Vector3(r.W, FloorThickness, r.D));
                 return;
             }
             // sloped: smooth collider for the character, stepped visuals for stairs
@@ -66,8 +71,8 @@ namespace Undertow
             float ang = Mathf.Atan2(dy, run) * Mathf.Rad2Deg;
             var center = new Vector3(r.X + r.W * 0.5f, (f.Y0 + f.Y1) * 0.5f, r.Z + r.D * 0.5f);
             Quaternion rot = f.AlongX ? Quaternion.Euler(0f, 0f, ang) : Quaternion.Euler(-ang, 0f, 0f);
-            var colSize = f.AlongX ? new Vector3(len, 0.5f, r.D) : new Vector3(r.W, 0.5f, len);
-            kit.Collider(center + rot * new Vector3(0, -0.25f, 0), colSize, rot);
+            var colSize = f.AlongX ? new Vector3(len, FloorThickness, r.D) : new Vector3(r.W, FloorThickness, len);
+            kit.Collider(center + rot * new Vector3(0, -FloorThickness * 0.5f, 0), colSize, rot);
             if (st.Steps(f.Room))
             {
                 float rise = 0.19f;

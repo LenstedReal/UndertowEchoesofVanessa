@@ -59,6 +59,8 @@ ui.main_menu = 메인 메뉴
 ui.menu_body = 메인 메뉴로 돌아갈까요? 마지막 체크포인트 이후의 진행 상황은 사라집니다.
 ui.quit_desktop = 바탕화면으로 나가기
 ui.quit_body = 바탕화면으로 나갈까요? 마지막 체크포인트 이후의 진행 상황은 사라집니다.
+ui.error.title = 문제가 발생했습니다
+ui.error.body = 게임의 이 부분을 불러오지 못했습니다. 저장 데이터는 안전합니다. 문제를 신고할 때 아래 줄을 함께 보내 주세요.
 ui.objective = 목표
 ui.pause_stats = 찾은 그림: {0} / 6      랜턴 기름: {1}%
 ui.journal = 수첩
@@ -184,6 +186,8 @@ ui.photo.saved = 사진 저장됨:
 
 hud.saving = 저장 중…
 toast.achievement = 업적 달성
+msg.tut_move_kb = {0} 걷기   ·   마우스: 둘러보기   ·   {1} 사용   ·   {2} 일지
+msg.tut_move_pad = {0} 걷기   ·   {1} 둘러보기   ·   {2} 사용   ·   {3} 일지
 msg.tut_lantern = {0}  랜턴 켜기·끄기. 켜져 있는 동안 기름을 씁니다.
 msg.tut_listen = {0} 길게 눌러 듣기. 목소리가 길을 알려 준다.
 msg.no_oil = 기름이 떨어졌다.

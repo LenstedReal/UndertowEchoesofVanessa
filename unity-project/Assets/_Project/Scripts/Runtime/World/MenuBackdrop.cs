@@ -91,8 +91,9 @@ namespace Undertow
             wreck["wood_dark"].Cylinder(new Vector3(0, 3f, 2f), Quaternion.Euler(0, 0, 25), 14f, 0.25f, 0.15f, 8);
             wreck.Spawn("wreck", transform, new Vector3(-26f, -2f, 38f), Quaternion.Euler(0, 30, 0));
 
-            // key art, when the project has it (a real image, not a placeholder)
-            var art = Resources.Load<Texture2D>("MainMenuKeyArt");
+            // A painted background, only when the project has one WITHOUT text. MainMenuKeyArt.png is not used:
+            // it has the title and a whole menu painted in, which doubled the real menu on top of it.
+            var art = Resources.Load<Texture2D>("MainMenuBackground");
             if (art != null && art.width > 256)
             {
                 var canvasGo = new GameObject("KeyArt");

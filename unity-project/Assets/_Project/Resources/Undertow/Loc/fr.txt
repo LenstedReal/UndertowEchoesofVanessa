@@ -59,6 +59,8 @@ ui.main_menu = Menu principal
 ui.menu_body = Revenir au menu principal ? La progression depuis le dernier point de contrôle sera perdue.
 ui.quit_desktop = Quitter vers le bureau
 ui.quit_body = Quitter vers le bureau ? La progression depuis le dernier point de contrôle sera perdue.
+ui.error.title = Une erreur est survenue
+ui.error.body = Cette partie du jeu n'a pas pu être chargée. Vos sauvegardes sont intactes. Si vous signalez le problème, joignez la ligne ci-dessous.
 ui.objective = Objectif
 ui.pause_stats = Dessins trouvés : {0} sur 6      Huile de la lanterne : {1} %
 ui.journal = Carnet
@@ -184,6 +186,8 @@ ui.photo.saved = Photo enregistrée :
 
 hud.saving = Sauvegarde…
 toast.achievement = Succès débloqué
+msg.tut_move_kb = {0} marcher   ·   Souris : regarder   ·   {1} utiliser   ·   {2} journal
+msg.tut_move_pad = {0} marcher   ·   {1} regarder   ·   {2} utiliser   ·   {3} journal
 msg.tut_lantern = {0}  Allumer ou éteindre la lanterne. Elle consomme de l'huile quand elle brûle.
 msg.tut_listen = Maintenez {0} pour écouter. Les voix vous montrent le chemin.
 msg.no_oil = Plus d'huile.

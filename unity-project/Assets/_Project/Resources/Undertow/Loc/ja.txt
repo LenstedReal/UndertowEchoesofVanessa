@@ -59,6 +59,8 @@ ui.main_menu = メインメニュー
 ui.menu_body = メインメニューに戻りますか？最後のチェックポイント以降の進行は失われます。
 ui.quit_desktop = デスクトップに戻る
 ui.quit_body = デスクトップに戻りますか？最後のチェックポイント以降の進行は失われます。
+ui.error.title = 問題が発生しました
+ui.error.body = ゲームのこの部分を読み込めませんでした。セーブデータは無事です。不具合を報告する際は、下の行も添えてください。
 ui.objective = 目的
 ui.pause_stats = 見つけた絵：{0} / 6      ランタンの油：{1}%
 ui.journal = 手帳
@@ -184,6 +186,8 @@ ui.photo.saved = 写真を保存しました：
 
 hud.saving = セーブ中…
 toast.achievement = 実績解除
+msg.tut_move_kb = {0} 歩く   ·   マウス：見回す   ·   {1} 使う   ·   {2} 日誌
+msg.tut_move_pad = {0} 歩く   ·   {1} 見回す   ·   {2} 使う   ·   {3} 日誌
 msg.tut_lantern = {0}  ランタンの点灯・消灯。灯している間、油を消費します。
 msg.tut_listen = {0} 長押しで耳を澄ます。声が道を教えてくれる。
 msg.no_oil = 油が尽きた。

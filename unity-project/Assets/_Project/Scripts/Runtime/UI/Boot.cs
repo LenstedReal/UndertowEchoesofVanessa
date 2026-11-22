@@ -16,6 +16,12 @@ namespace Undertow
         {
             var s = Game.Settings;
             Game.UI.SetFade(1f);
+            // A black curtain behind the first-run screens: the menu backdrop (ship, fog, music box)
+            // must not flash between language, warning and brightness, and only appears with the menu.
+            var curtain = UIKit.Image(Game.UI.ScreenLayer, "BootCurtain", Color.black);
+            UIKit.Stretch((RectTransform)curtain.transform);
+            curtain.raycastTarget = false;
+            curtain.transform.SetAsFirstSibling();
             yield return null;
             if (!s.LanguageChosen)
             {
@@ -44,6 +50,7 @@ namespace Undertow
             s.Save(Game.Saves.SettingsPath);
             yield return Splash();
             Done = true;
+            if (curtain != null) UnityEngine.Object.Destroy(curtain.gameObject);
             Game.UI.Replace(new MainMenu());
             if (!Game.Audio.MusicPlaying) Game.Audio.PlayMusic("mus_menu", 3f, 0.8f);
             yield return Game.UI.Fade(0f, 1.8f);

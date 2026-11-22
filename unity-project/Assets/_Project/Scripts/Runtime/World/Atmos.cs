@@ -197,6 +197,7 @@ namespace Undertow
             int level = s.Quality >= 3 ? (int)ScalableSettingLevelParameter.Level.High : (s.Quality >= 1 ? (int)ScalableSettingLevelParameter.Level.Medium : (int)ScalableSettingLevelParameter.Level.Low);
             _fog.quality.Override(level);
             _ssao.quality.Override(level);
+            LightKit.Reapply();
         }
 
         readonly Dictionary<int, VolumeProfile> _interiorProfiles = new Dictionary<int, VolumeProfile>();

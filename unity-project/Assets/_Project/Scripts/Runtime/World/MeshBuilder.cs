@@ -51,6 +51,7 @@ namespace Undertow
         public void QuadUV(Vector3 a, Vector3 b, Vector3 c, Vector3 d, Vector2 ua, Vector2 ub, Vector2 uc, Vector2 ud)
         {
             var n = Vector3.Cross(d - a, b - a).normalized;
+            if (n.sqrMagnitude < 1e-8f) n = Vector3.up;
             int i0 = Add(a, n, ua), i1 = Add(b, n, ub), i2 = Add(c, n, uc), i3 = Add(d, n, ud);
             T.Add(i0); T.Add(i3); T.Add(i2);
             T.Add(i0); T.Add(i2); T.Add(i1);
@@ -59,7 +60,9 @@ namespace Undertow
         public void Tri(Vector3 a, Vector3 b, Vector3 c)
         {
             var n = Vector3.Cross(c - a, b - a).normalized;
+            if (n.sqrMagnitude < 1e-8f) n = Vector3.up;
             var u = (b - a).normalized;
+            if (u.sqrMagnitude < 1e-8f) u = Vector3.right;
             var v = Vector3.Cross(u, n);
             float s = TexScale;
             Vector2 P(Vector3 p) => new Vector2(Vector3.Dot(p, u) / s, Vector3.Dot(p, v) / s);
@@ -150,6 +153,7 @@ namespace Undertow
                 var next = profile[Mathf.Min(rows - 1, r + 1)];
                 var tangent = next - prev;
                 var n2 = new Vector2(tangent.y, -tangent.x).normalized; // outward
+                if (n2.sqrMagnitude < 1e-8f) n2 = Vector2.right;        // two profile points on the same spot
                 for (int i = 0; i <= seg; i++)
                 {
                     float a = i / (float)seg * Mathf.PI * 2f;
@@ -178,13 +182,18 @@ namespace Undertow
             float s = uvScale > 0f ? uvScale : TexScale;
             int start = V.Count;
             float len = 0f;
-            Vector3 up = Vector3.up;
+            // The ring's frame is carried along the path (no fixed "up"), so a tube can run straight up,
+            // sideways or round a full circle without the ring ever collapsing or twisting.
+            Vector3 side = Vector3.zero, lastFwd = Vector3.forward;
             for (int k = 0; k < path.Count; k++)
             {
                 var fwd = (k < path.Count - 1 ? path[k + 1] - path[k] : path[k] - path[k - 1]).normalized;
+                if (fwd.sqrMagnitude < 1e-8f) fwd = lastFwd;     // two points on the same spot
+                lastFwd = fwd;
                 if (k > 0) len += Vector3.Distance(path[k], path[k - 1]);
-                if (Mathf.Abs(Vector3.Dot(fwd, up)) > 0.95f) up = Vector3.right;
-                var side = Vector3.Cross(fwd, up).normalized;
+                side -= fwd * Vector3.Dot(side, fwd);
+                if (side.sqrMagnitude < 1e-6f) side = Vector3.Cross(fwd, Mathf.Abs(fwd.y) > 0.95f ? Vector3.right : Vector3.up);
+                side.Normalize();
                 var up2 = Vector3.Cross(side, fwd);
                 for (int i = 0; i <= seg; i++)
                 {
@@ -259,7 +268,8 @@ namespace Undertow
             for (int i = 0; i < o.V.Count; i++)
             {
                 V.Add(m.MultiplyPoint3x4(o.V[i]));
-                N.Add(m.MultiplyVector(o.N[i]).normalized);
+                var n = m.MultiplyVector(o.N[i]);
+                N.Add(n.sqrMagnitude > 1e-12f ? n.normalized : Vector3.up);
                 UV.Add(o.UV[i]);
                 C.Add(o.C[i]);
             }

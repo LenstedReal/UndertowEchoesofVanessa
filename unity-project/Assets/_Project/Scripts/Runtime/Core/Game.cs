@@ -30,6 +30,23 @@ namespace Undertow
 
         public static string VersionLabel => "v" + Application.version + (Debug.isDebugBuild ? " dev" : "");
 
+        /// <summary>The last error or exception Unity logged (shown by the F3 overlay and the error screen).</summary>
+        public static string LastError { get; private set; }
+        public static int ErrorCount { get; private set; }
+
+        static void OnLog(string condition, string stackTrace, LogType type)
+        {
+            if (type != LogType.Error && type != LogType.Exception && type != LogType.Assert) return;
+            ErrorCount++;
+            string where = "";
+            if (!string.IsNullOrEmpty(stackTrace))
+            {
+                int nl = stackTrace.IndexOf('\n');
+                where = (nl > 0 ? stackTrace.Substring(0, nl) : stackTrace).Trim();
+            }
+            LastError = condition + (where.Length > 0 ? "  @ " + where : "");
+        }
+
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
         static void ResetStatics()
         {
@@ -45,6 +62,8 @@ namespace Undertow
             Act = null;
             Booted = false;
             Paused = false;
+            LastError = null;
+            ErrorCount = 0;
         }
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
@@ -53,6 +72,8 @@ namespace Undertow
             if (Booted) return;
             Booted = true;
             Application.runInBackground = false;
+            Application.logMessageReceived -= OnLog;
+            Application.logMessageReceived += OnLog;
 
             var go = new GameObject("[Undertow]");
             UnityEngine.Object.DontDestroyOnLoad(go);

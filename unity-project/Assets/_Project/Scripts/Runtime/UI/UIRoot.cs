@@ -72,7 +72,11 @@ namespace Undertow
         Text _loadTitle, _loadLine, _loadTip;
         Image _spinner;
         Text _version;
-        Coroutine _fadeCo;
+        RectTransform _diagPanel;
+        Image _diagBg;
+        Text _diag;
+        int _diagFrames;
+        float _diagTime;
         EventSystem _events;
         bool _hudHidden;
         float _fadeAlpha;
@@ -102,8 +106,9 @@ namespace Undertow
             var scaler = gameObject.AddComponent<CanvasScaler>();
             scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
             scaler.referenceResolution = new Vector2(1920, 1080);
-            scaler.screenMatchMode = CanvasScaler.ScreenMatchMode.MatchWidthOrHeight;
-            scaler.matchWidthOrHeight = 0.5f;
+            // Expand: the canvas is never smaller than 1920x1080 in either direction, so nothing laid
+            // out for 16:9 is cut off on 4:3, 5:4, 16:10 or 21:9 screens (extra room is left empty).
+            scaler.screenMatchMode = CanvasScaler.ScreenMatchMode.Expand;
             gameObject.AddComponent<GraphicRaycaster>();
 
             var esGo = new GameObject("EventSystem");
@@ -114,7 +119,6 @@ namespace Undertow
 
             var root = (RectTransform)transform;
             HudLayer = UIKit.Stretch(UIKit.Rect(root, "Hud"));
-            TouchControls.Build(root);   // TEST BUILD: on-screen buttons above the HUD, below every menu
             _dim = UIKit.Image(root, "Dim", new Color(0, 0, 0, 0.55f));
             UIKit.Stretch((RectTransform)_dim.transform);
             _dim.enabled = false;
@@ -127,6 +131,19 @@ namespace Undertow
 
             _version = UIKit.Label(OverlayLayer, "Version", Game.VersionLabel, 16, FontRole.Ui, TextAnchor.LowerRight, new Color(1, 1, 1, 0.28f));
             UIKit.Anchor((RectTransform)_version.transform, new Vector2(1, 0), new Vector2(1, 0), new Vector2(-14, 8), new Vector2(400, 24));
+
+            // F3: hidden diagnostics (frame rate, graphics card, screen, place, last error) for testing on other PCs
+            var diagBg = UIKit.Image(OverlayLayer, "Diagnostics", new Color(0f, 0f, 0f, 0.72f));
+            diagBg.raycastTarget = false;
+            _diagBg = diagBg;
+            _diagPanel = (RectTransform)diagBg.transform;
+            UIKit.Anchor(_diagPanel, new Vector2(0, 1), new Vector2(0, 1), new Vector2(12, -12), new Vector2(1240, 210));
+            _diag = UIKit.Label(_diagPanel, "Text", "", 19, FontRole.Ui, TextAnchor.UpperLeft, new Color(1f, 0.97f, 0.86f, 1f));
+            UIKit.Stretch((RectTransform)_diag.transform, 14, 10, 14, 10);
+            _diag.raycastTarget = false;
+            _diag.horizontalOverflow = HorizontalWrapMode.Wrap;
+            _diag.verticalOverflow = VerticalWrapMode.Truncate;
+            _diagPanel.gameObject.SetActive(false);
 
             BuildLoading();
             _fade = UIKit.Image(OverlayLayer, "Fade", Color.black);
@@ -245,10 +262,19 @@ namespace Undertow
 
         public void Tick()
         {
-            TouchControls.Tick();
+            FadeTick();
             // back / cancel for the top screen (gameplay map may be disabled, read devices directly)
             var top = Top;
-            if (top != null && !Game.Input.Rebinding)
+            bool photo = top is PhotoMode;
+            var kb = Keyboard.current;
+            if (kb != null && kb.f3Key.wasPressedThisFrame && !Game.Input.RebindBusy)
+                _diagPanel.gameObject.SetActive(!_diagPanel.gameObject.activeSelf);
+            if (_diagPanel.gameObject.activeSelf) DiagTick();
+            // nothing of ours in a photo
+            _version.enabled = Game.Settings.ShowVersion && !photo;
+            _diag.enabled = !photo;
+            _diagBg.enabled = !photo;
+            if (top != null && !Game.Input.RebindBusy)
             {
                 bool back = (Keyboard.current != null && Keyboard.current.escapeKey.wasPressedThisFrame) ||
                             (Gamepad.current != null && (Gamepad.current.buttonEast.wasPressedThisFrame || Gamepad.current.startButton.wasPressedThisFrame && top is PauseMenu));
@@ -262,8 +288,8 @@ namespace Undertow
             }
             else if (CanPauseNow)
             {
-                if (Game.Input.Pause.WasPressedThisFrame() || TouchControls.TakePause()) OpenPause();
-                else if (Game.Input.Journal.WasPressedThisFrame() || TouchControls.TakeJournal()) OpenJournal();
+                if (Game.Input.Pause.WasPressedThisFrame()) OpenPause();
+                else if (Game.Input.Journal.WasPressedThisFrame()) OpenJournal();
                 else if (Game.Input.Photo.WasPressedThisFrame() && Game.Act != null) Push(new PhotoMode());
                 else if (Game.Input.HideHud.WasPressedThisFrame())
                 {
@@ -271,18 +297,62 @@ namespace Undertow
                     RefreshMode();
                 }
             }
-            bool cursor = top != null ? top.ShowCursor : (!InGame || TouchControls.Active);
+            bool cursor = top != null ? top.ShowCursor : !InGame;
             Cursor.visible = cursor && !Game.Input.UsingGamepad;
-            // the touch test controls need a free cursor during play; RefreshMode locks it otherwise
-            if (TouchControls.Enabled && top == null && InGame) Cursor.lockState = cursor ? CursorLockMode.None : CursorLockMode.Locked;
             if (_loading.gameObject.activeSelf) _spinner.rectTransform.Rotate(0, 0, -240f * Time.unscaledDeltaTime);
             Hud.Tick();
             Subtitles.Tick();
             Toasts.Tick();
         }
 
+        void DiagTick()
+        {
+            _diagFrames++;
+            _diagTime += Time.unscaledDeltaTime;
+            if (_diagTime < 0.5f && _diag.text.Length > 0) return;
+            float fps = _diagTime > 0f ? _diagFrames / _diagTime : 0f;
+            _diagFrames = 0;
+            _diagTime = 0f;
+            var inv = System.Globalization.CultureInfo.InvariantCulture;
+            var sb = new System.Text.StringBuilder(512);
+            sb.Append("Undertow ").Append(Game.VersionLabel).Append("    ").Append(fps.ToString("0", inv)).Append(" fps  (")
+              .Append((1000f / Mathf.Max(fps, 0.01f)).ToString("0.0", inv)).Append(" ms)\n");
+            sb.Append("GPU  ").Append(SystemInfo.graphicsDeviceName).Append("  ·  ").Append(SystemInfo.graphicsMemorySize).Append(" MB  ·  ")
+              .Append(SystemInfo.graphicsDeviceVersion).Append('\n');
+            sb.Append("CPU  ").Append(SystemInfo.processorType).Append("  ·  RAM ").Append(SystemInfo.systemMemorySize).Append(" MB  ·  ")
+              .Append(SystemInfo.operatingSystem).Append('\n');
+            sb.Append("Screen  ").Append(Screen.width).Append('x').Append(Screen.height).Append("  ·  ").Append(Screen.fullScreenMode)
+              .Append("  ·  quality ").Append(Game.Settings.Quality).Append("  ·  vsync ").Append(Game.Settings.VSync ? "on" : "off").Append('\n');
+            sb.Append("Scene  ").Append(UnityEngine.SceneManagement.SceneManager.GetActiveScene().name);
+            var act = Game.Act;
+            if (act != null)
+            {
+                sb.Append("  ·  room ").Append(act.Room != null ? act.Room.Id : "-");
+                if (act.Player != null)
+                {
+                    var p = act.Player.Feet;
+                    sb.Append("  ·  ").Append(p.x.ToString("0.0", inv)).Append(", ").Append(p.y.ToString("0.0", inv)).Append(", ").Append(p.z.ToString("0.0", inv));
+                }
+            }
+            sb.Append('\n').Append("Errors  ").Append(Game.ErrorCount);
+            var last = Game.LastError;
+            if (!string.IsNullOrEmpty(last)) sb.Append("  ·  ").Append(last.Length > 240 ? last.Substring(0, 240) + "…" : last);
+            _diag.text = sb.ToString();
+        }
+
         // ------------------------------------------------------------------ fades & loading
+        float _fadeFrom, _fadeTo, _fadeTime, _fadeDuration;
+        bool _fading;
+        int _fadeGen;
+
+        /// <summary>Sets the black overlay at once. Ends a running fade (whoever waits on it moves on).</summary>
         public void SetFade(float a)
+        {
+            _fading = false;
+            ApplyFade(a);
+        }
+
+        void ApplyFade(float a)
         {
             _fadeAlpha = a;
             _fade.color = new Color(0, 0, 0, a);
@@ -292,23 +362,36 @@ namespace Undertow
 
         public float FadeAlpha => _fadeAlpha;
 
-        public Coroutine Fade(float to, float seconds)
+        /// <summary>
+        /// Fades the black overlay to 'to' over 'seconds' (unscaled time). Yield on the result to wait for it.
+        /// The wait ends when this fade is done OR when a newer Fade / SetFade replaced it, so two systems
+        /// fading at the same time (a scene change and an ending, a rescue and a story moment) can never
+        /// leave each other suspended. (Yielding on a Coroutine that gets stopped would hang forever.)
+        /// </summary>
+        public CustomYieldInstruction Fade(float to, float seconds)
         {
-            if (_fadeCo != null) StopCoroutine(_fadeCo);
-            _fadeCo = StartCoroutine(FadeCo(to, seconds));
-            return _fadeCo;
+            int gen = ++_fadeGen;
+            _fadeFrom = _fadeAlpha;
+            _fadeTo = to;
+            _fadeTime = 0f;
+            _fadeDuration = Mathf.Max(0f, seconds);
+            _fading = _fadeDuration > 0f;
+            if (!_fading) ApplyFade(to);
+            return new WaitWhile(() => _fading && _fadeGen == gen);
         }
 
-        IEnumerator FadeCo(float to, float seconds)
+        void FadeTick()
         {
-            float from = _fadeAlpha;
-            for (float t = 0f; t < seconds; t += Time.unscaledDeltaTime)
+            if (!_fading) return;
+            // capped step: a long frame (a world being built) must not swallow the whole fade
+            _fadeTime += Mathf.Min(Time.unscaledDeltaTime, 0.1f);
+            if (_fadeTime >= _fadeDuration)
             {
-                SetFade(Mathf.Lerp(from, to, Mathf.SmoothStep(0f, 1f, t / seconds)));
-                yield return null;
+                _fading = false;
+                ApplyFade(_fadeTo);
+                return;
             }
-            SetFade(to);
-            _fadeCo = null;
+            ApplyFade(Mathf.Lerp(_fadeFrom, _fadeTo, Mathf.SmoothStep(0f, 1f, _fadeTime / _fadeDuration)));
         }
 
         public void ShowLoading(string title, string line, string tip)

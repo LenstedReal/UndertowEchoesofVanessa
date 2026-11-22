@@ -59,6 +59,8 @@ ui.main_menu = 主菜单
 ui.menu_body = 要返回主菜单吗？上一个检查点之后的进度将会丢失。
 ui.quit_desktop = 退出到桌面
 ui.quit_body = 要退出到桌面吗？上一个检查点之后的进度将会丢失。
+ui.error.title = 出现了问题
+ui.error.body = 无法载入游戏的这一部分。你的存档是安全的。报告问题时请附上下面这一行。
 ui.objective = 目标
 ui.pause_stats = 已找到画作：{0} / 6      灯油：{1}%
 ui.journal = 日记
@@ -184,6 +186,8 @@ ui.photo.saved = 照片已保存：
 
 hud.saving = 正在保存……
 toast.achievement = 成就解锁
+msg.tut_move_kb = {0} 行走   ·   鼠标：环视   ·   {1} 使用   ·   {2} 日志
+msg.tut_move_pad = {0} 行走   ·   {1} 环视   ·   {2} 使用   ·   {3} 日志
 msg.tut_lantern = {0}  点亮或熄灭提灯。点亮时会消耗灯油。
 msg.tut_listen = 按住 {0} 聆听。声音会为你指路。
 msg.no_oil = 灯油用完了。

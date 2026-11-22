@@ -83,12 +83,26 @@ namespace Undertow
             {
                 if (File.Exists(path) && MiniJson.TryParse(File.ReadAllText(path), out var root) && root is Dictionary<string, object> d)
                     s.Read(d);
+                else
+                    s.Quality = FirstRunQuality(SystemInfo.graphicsMemorySize, SystemInfo.systemMemorySize);
             }
             catch (Exception e)
             {
                 Game.Warn("settings unreadable, using defaults: " + e.Message);
             }
             return s;
+        }
+
+        /// <summary>
+        /// First start only: older or smaller graphics cards begin on a lighter preset (the player can
+        /// raise it in Settings). 0 = Low, 1 = Medium, 2 = High.
+        /// </summary>
+        public static int FirstRunQuality(int vramMB, int ramMB)
+        {
+            if (vramMB > 0 && vramMB < 1800) return 0;
+            if (ramMB > 0 && ramMB < 7000) return 0;
+            if (vramMB > 0 && vramMB < 3500) return 1;
+            return 2;
         }
 
         public void Save(string path)

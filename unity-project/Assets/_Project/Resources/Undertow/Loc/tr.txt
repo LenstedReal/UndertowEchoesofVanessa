@@ -63,6 +63,8 @@ ui.main_menu = Ana Menü
 ui.menu_body = Ana menüye dönülsün mü? Son kontrol noktasından sonraki ilerleme kaybolur.
 ui.quit_desktop = Masaüstüne Çık
 ui.quit_body = Masaüstüne çıkılsın mı? Son kontrol noktasından sonraki ilerleme kaybolur.
+ui.error.title = Bir şeyler ters gitti
+ui.error.body = Oyunun bu bölümü yüklenemedi. Kayıtların güvende. Sorunu bildirirsen aşağıdaki satırı da ekle.
 ui.objective = Hedef
 ui.pause_stats = Bulunan çizimler: {0} / 6      Fener yağı: %{1}
 ui.journal = Günlük
@@ -192,6 +194,8 @@ ui.photo.saved = Fotoğraf kaydedildi:
 # ---------------------------------------------------------------- arayüz ve mesajlar
 hud.saving = Kaydediliyor…
 toast.achievement = Başarım açıldı
+msg.tut_move_kb = {0} yürü   ·   Fare: bak   ·   {1} kullan   ·   {2} günlük
+msg.tut_move_pad = {0} yürü   ·   {1} bak   ·   {2} kullan   ·   {3} günlük
 msg.tut_lantern = {0}  Feneri aç ve kapa. Yanarken yağ yakar.
 msg.tut_listen = Dinlemek için {0} tuşunu basılı tut. Sesler sana yolu gösterir.
 msg.no_oil = Yağ kalmadı.

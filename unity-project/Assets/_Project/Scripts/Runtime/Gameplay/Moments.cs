@@ -52,7 +52,7 @@ namespace Undertow
                     var lamp = rt.World.AnchorOrNull("capt_lamp");
                     if (lamp != null) foreach (var l in lamp.GetComponentsInChildren<Light>()) l.enabled = false;
                     foreach (var l in rt.World.FlickerLights) if (l != null) l.enabled = false;
-                    rt.Player.Lantern.Flicker.Strength = 0f;
+                    rt.Player.Lantern.Smothered = true;
                     Game.Audio.Play2D("sfx_hull_groan_big", Bus.Effects, 1f);
                     Caption("caption.something_passes", 4f);
                     p.Shake(0.9f, 3.5f);

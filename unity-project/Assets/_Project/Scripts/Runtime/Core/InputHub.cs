@@ -153,6 +153,14 @@ namespace Undertow
 
         public bool Rebinding => _rebind != null;
 
+        int _rebindEndFrame = -10;
+
+        /// <summary>
+        /// True while a rebind listens and for the frame it ended in. The key that cancelled it (Esc) is
+        /// not swallowed by the Input System, so without this the same press would also close the menu.
+        /// </summary>
+        public bool RebindBusy => _rebind != null || Time.frameCount <= _rebindEndFrame + 1;
+
         public void StartRebind(InputAction a, bool gamepad, Action<bool> done)
         {
             int index = BindingIndex(a, gamepad);
@@ -175,6 +183,7 @@ namespace Undertow
                 {
                     op.Dispose();
                     _rebind = null;
+                    _rebindEndFrame = Time.frameCount;
                     if (wasEnabled) a.Enable();
                     SaveOverrides();
                     done?.Invoke(true);
@@ -183,6 +192,7 @@ namespace Undertow
                 {
                     op.Dispose();
                     _rebind = null;
+                    _rebindEndFrame = Time.frameCount;
                     if (wasEnabled) a.Enable();
                     done?.Invoke(false);
                 })
@@ -194,6 +204,7 @@ namespace Undertow
             if (_rebind == null) return;
             _rebind.Cancel();
             _rebind = null;
+            _rebindEndFrame = Time.frameCount;
         }
 
         public void ResetBindings()

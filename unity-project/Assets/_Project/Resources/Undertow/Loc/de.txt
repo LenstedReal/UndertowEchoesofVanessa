@@ -59,6 +59,8 @@ ui.main_menu = Hauptmenü
 ui.menu_body = Zum Hauptmenü zurückkehren? Fortschritt seit dem letzten Checkpoint geht verloren.
 ui.quit_desktop = Zum Desktop
 ui.quit_body = Zum Desktop beenden? Fortschritt seit dem letzten Checkpoint geht verloren.
+ui.error.title = Etwas ist schiefgelaufen
+ui.error.body = Dieser Teil des Spiels konnte nicht geladen werden. Deine Spielstände sind sicher. Wenn du den Fehler meldest, füge bitte die Zeile unten bei.
 ui.objective = Ziel
 ui.pause_stats = Gefundene Zeichnungen: {0} von 6      Lampenöl: {1} %
 ui.journal = Tagebuch
@@ -184,6 +186,8 @@ ui.photo.saved = Foto gespeichert:
 
 hud.saving = Speichere …
 toast.achievement = Erfolg freigeschaltet
+msg.tut_move_kb = {0} gehen   ·   Maus: umsehen   ·   {1} benutzen   ·   {2} Tagebuch
+msg.tut_move_pad = {0} gehen   ·   {1} umsehen   ·   {2} benutzen   ·   {3} Tagebuch
 msg.tut_lantern = {0}  Laterne an und aus. Solange sie brennt, verbraucht sie Öl.
 msg.tut_listen = Halte {0}, um zu lauschen. Stimmen weisen dir den Weg.
 msg.no_oil = Kein Öl mehr.

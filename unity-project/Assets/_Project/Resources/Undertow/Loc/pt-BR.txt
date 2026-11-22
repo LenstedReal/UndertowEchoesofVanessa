@@ -59,6 +59,8 @@ ui.main_menu = Menu principal
 ui.menu_body = Voltar ao menu principal? O progresso desde o último checkpoint será perdido.
 ui.quit_desktop = Sair para a área de trabalho
 ui.quit_body = Sair para a área de trabalho? O progresso desde o último checkpoint será perdido.
+ui.error.title = Algo deu errado
+ui.error.body = Não foi possível carregar esta parte do jogo. Seus saves estão seguros. Se for relatar o problema, inclua a linha abaixo.
 ui.objective = Objetivo
 ui.pause_stats = Desenhos encontrados: {0} de 6      Óleo da lanterna: {1}%
 ui.journal = Diário
@@ -184,6 +186,8 @@ ui.photo.saved = Foto salva:
 
 hud.saving = Salvando…
 toast.achievement = Conquista desbloqueada
+msg.tut_move_kb = {0} andar   ·   Mouse: olhar   ·   {1} usar   ·   {2} diário
+msg.tut_move_pad = {0} andar   ·   {1} olhar   ·   {2} usar   ·   {3} diário
 msg.tut_lantern = {0}  Acender e apagar a lanterna. Ela gasta óleo enquanto está acesa.
 msg.tut_listen = Segure {0} para escutar. As vozes mostram o caminho.
 msg.no_oil = O óleo acabou.

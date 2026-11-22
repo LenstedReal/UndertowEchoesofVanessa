@@ -28,6 +28,7 @@ namespace Undertow
         public float PhotoHide;
 
         bool _started;
+        bool _finished;
         float _saveCooldown;
 
         public static ActRuntime Create(ActDef act, GameState state)
@@ -81,7 +82,13 @@ namespace Undertow
             _goalFlag = g?.Flag;
             if (State.Checkpoint == "start" && Act.Id == 1 && !State.Has("tut_lantern"))
             {
-                yield return new WaitForSeconds(3.5f);
+                yield return new WaitForSeconds(1.5f);
+                var inp = Game.Input;
+                string moves = inp.UsingGamepad
+                    ? Game.Loc.F("msg.tut_move_pad", inp.Tag(inp.Move), inp.Tag(inp.Look), inp.Tag(inp.Interact), inp.Tag(inp.Journal))
+                    : Game.Loc.F("msg.tut_move_kb", inp.Tag(inp.Move), inp.Tag(inp.Interact), inp.Tag(inp.Journal));
+                Game.UI.Hud.Message(moves, 6f);
+                yield return new WaitForSeconds(7f);
                 Game.UI.Hud.Message(Game.Loc.F("msg.tut_lantern", Game.Input.Tag(Game.Input.Lantern)), 5f);
                 yield return new WaitForSeconds(6f);
                 Game.UI.Hud.Message(Game.Loc.F("msg.tut_listen", Game.Input.Tag(Game.Input.Listen)), 5f);
@@ -108,12 +115,9 @@ namespace Undertow
             if (room != Room) OnRoomChanged(room);
 
             bool control = !Player.InputLocked && Game.UI.ScreenCount == 0 && !Game.UI.Cinematic && !Finishing && !Game.Flow.Busy;
-            if (control && (Game.Input.Lantern.WasPressedThisFrame() || TouchControls.TakeLantern())) ToggleLantern();
+            if (control && Game.Input.Lantern.WasPressedThisFrame()) ToggleLantern();
             ListenTick(control, dt);
-            // with the touch test controls a tap is a left click: the overlay decides what it means, not the click binding
-            bool interact = Game.Input.Interact.WasPressedThisFrame() &&
-                            !(TouchControls.Active && UnityEngine.InputSystem.Mouse.current != null && UnityEngine.InputSystem.Mouse.current.leftButton.wasPressedThisFrame);
-            if (control && (interact || TouchControls.TakeInteract()) && Player.Focus != null) Use(Player.Focus);
+            if (control && Game.Input.Interact.WasPressedThisFrame() && Player.Focus != null) Use(Player.Focus);
 
             if (control) WalkInExits(feet);
             if (Session.Lantern.Tick(dt, Player.Sprinting)) OnLanternOut();
@@ -306,7 +310,7 @@ namespace Undertow
         IEnumerator SyncCratesLater()
         {
             yield return new WaitForSeconds(0.5f);
-            foreach (var c in Session.PuzzleItems("a1c", ItemKind.Crate).Concat(Session.PuzzleItems("a2c", ItemKind.Crate)))
+            foreach (var c in Session.PuzzleItems("a1c", ItemKind.Crate).Concat(Session.PuzzleItems("a2x", ItemKind.Crate)))
                 if (World.Items.TryGetValue(c.Id, out var ia) && ia != null) ia.Sync(Session);
         }
 
@@ -419,7 +423,9 @@ namespace Undertow
         /// <summary>Ends the act: achievements for the act, then the next chapter (or the endings).</summary>
         public void FinishAct()
         {
-            if (Finishing) return;
+            // Not "if (Finishing)": the closing moments set Finishing themselves (BeginMoment) before they call this.
+            if (_finished) return;
+            _finished = true;
             Finishing = true;
             Session.SyncToState();
             Game.Achievements.UnlockAll(Session.ActEndAchievements());

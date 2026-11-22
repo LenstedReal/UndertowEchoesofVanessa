@@ -13,6 +13,8 @@ namespace Undertow
         public Light Light;
         public Flicker Flicker;
         public Transform Model;
+        /// <summary>Set by a story moment: the flame is blown out whatever the oil says.</summary>
+        public bool Smothered;
         PlayerRig _p;
         Vector3 _restPos = new Vector3(-0.27f, -0.33f, 0.46f);
         Vector3 _swing;
@@ -82,13 +84,13 @@ namespace Undertow
                 _lit = m.Lit;
                 Game.Audio.PlayAt(_lit ? "sfx_lantern_on" : "sfx_lantern_off", transform.position, Bus.Effects, 0.7f, 1f, 0.5f, 8f);
             }
-            float strength = m.Strength01;
+            float strength = Smothered ? 0f : m.Strength01;
             if (m.Lit && m.Critical) strength *= 0.75f + 0.25f * Mathf.PerlinNoise(Time.time * 7f, 3.1f);
             Flicker.Strength = strength;
             Flicker.Wind = wind;
             Flicker.Amount = m.Low ? 0.16f : 0.07f;
             Light.enabled = m.Lit && strength > 0.01f;
-            if (_flame != null) _flame.enabled = m.Lit;
+            if (_flame != null) _flame.enabled = m.Lit && !Smothered;
             _visible = Mathf.MoveTowards(_visible, 1f - hide01, Time.deltaTime * 3f);
         }
 

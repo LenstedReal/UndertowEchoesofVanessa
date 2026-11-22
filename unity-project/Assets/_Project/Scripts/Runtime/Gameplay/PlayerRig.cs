@@ -28,7 +28,6 @@ namespace Undertow
         public const int LosMask = ~(1 << 2);
 
         float _yaw, _pitch;
-        bool _touchCrouch;
         float _height = StandHeight, _eye = StandEye;
         bool _crouch, _sprintLatched;
         Vector3 _vel;
@@ -39,6 +38,8 @@ namespace Undertow
         float _roll;
         int _lockCount;
         Coroutine _look;
+        int _lookGen;
+        bool _lookLocked;
 
         public bool InputLocked => _lockCount > 0;
         public bool Sprinting { get; private set; }
@@ -89,6 +90,9 @@ namespace Undertow
             CamData = camGo.AddComponent<HDAdditionalCameraData>();
             CamData.dithering = true;
             CamData.stopNaNs = true;
+            // Default + Ignore Raycast: the interior volumes (ambient and fog per room) sit on layer 2
+            // so they never block interaction rays; the default mask (layer 0 only) would skip them.
+            CamData.volumeLayerMask = (1 << 0) | (1 << 2);
             Listener = camGo.AddComponent<AudioListener>();
             Game.Audio.BindListener(Listener);
             Lantern = LanternRig.Create(this);
@@ -146,16 +150,24 @@ namespace Undertow
         }
 
         /// <summary>Turns the view towards a point over 'seconds' (input is locked meanwhile when lockInput).</summary>
-        public Coroutine LookAt(Vector3 target, float seconds, bool lockInput = true)
+        public CustomYieldInstruction LookAt(Vector3 target, float seconds, bool lockInput = true)
         {
-            if (_look != null) StopCoroutine(_look);
+            if (_look != null)
+            {
+                // a newer look replaces the old one: release its input lock, and its waiter (below) moves on
+                StopCoroutine(_look);
+                _look = null;
+                if (_lookLocked) { _lookLocked = false; Unlock(); }
+            }
+            int gen = ++_lookGen;
             _look = StartCoroutine(LookCo(target, seconds, lockInput));
-            return _look;
+            // Never yield on the Coroutine itself: a stopped coroutine would leave its waiter suspended forever.
+            return new WaitWhile(() => _look != null && _lookGen == gen);
         }
 
         IEnumerator LookCo(Vector3 target, float seconds, bool lockInput)
         {
-            if (lockInput) Lock();
+            if (lockInput) { Lock(); _lookLocked = true; }
             var dir = target - EyePos;
             float ty = Mathf.Atan2(dir.x, dir.z) * Mathf.Rad2Deg;
             float tp = -Mathf.Atan2(dir.y, new Vector2(dir.x, dir.z).magnitude) * Mathf.Rad2Deg;
@@ -172,7 +184,7 @@ namespace Undertow
             _yaw = ty;
             _pitch = Mathf.Clamp(tp, -85f, 85f);
             ApplyLook();
-            if (lockInput) Unlock();
+            if (lockInput && _lookLocked) { _lookLocked = false; Unlock(); }
             _look = null;
         }
 
@@ -209,30 +221,24 @@ namespace Undertow
             }
             else
             {
-                // with the touch test controls the free cursor jumps to every tap: it must not turn the view
                 var m = Mouse.current;
-                d = m != null && !TouchControls.Active ? m.delta.ReadValue() * (0.075f * s.MouseSensitivity) : Vector2.zero;
+                d = m != null ? m.delta.ReadValue() * (0.075f * s.MouseSensitivity) : Vector2.zero;
             }
             if (Lantern != null && Rt.Listening) d *= 0.65f;
             _yaw += d.x;
             _pitch += s.InvertY ? d.y : -d.y;
-            var touch = TouchControls.TakeLook(dt, _pitch);
-            _yaw += touch.x;
-            _pitch += touch.y;
             _pitch = Mathf.Clamp(_pitch, -85f, 85f);
         }
 
         void Move(float dt, bool control)
         {
             var s = Game.Settings;
-            Vector2 mv = control ? Vector2.ClampMagnitude(Game.Input.Move.ReadValue<Vector2>() + TouchControls.Move, 1f) : Vector2.zero;
+            Vector2 mv = control ? Vector2.ClampMagnitude(Game.Input.Move.ReadValue<Vector2>(), 1f) : Vector2.zero;
             // crouch
             if (control)
             {
                 if (s.ToggleCrouch) { if (Game.Input.Crouch.WasPressedThisFrame()) _crouch = !_crouch; }
-                else _crouch = Game.Input.Crouch.IsPressed() || TouchControls.Crouching;
-                if (s.ToggleCrouch && TouchControls.Crouching != _touchCrouch) _crouch = TouchControls.Crouching;
-                _touchCrouch = TouchControls.Crouching;
+                else _crouch = Game.Input.Crouch.IsPressed();
             }
             if (!_crouch && _height < StandHeight - 0.01f && !CanStand()) _crouch = true;
             float targetH = _crouch ? CrouchHeight : StandHeight;
@@ -245,12 +251,12 @@ namespace Undertow
             }
             _eye = Mathf.Lerp(CrouchEye, StandEye, Mathf.InverseLerp(CrouchHeight, StandHeight, _height));
             // sprint
-            bool sprintHeld = control && (Game.Input.Sprint.IsPressed() || TouchControls.Sprinting);
+            bool sprintHeld = control && Game.Input.Sprint.IsPressed();
             if (s.ToggleSprint)
             {
                 if (control && Game.Input.Sprint.WasPressedThisFrame()) _sprintLatched = !_sprintLatched;
                 if (mv.sqrMagnitude < 0.04f) _sprintLatched = false;
-                sprintHeld = _sprintLatched || (control && TouchControls.Sprinting);
+                sprintHeld = _sprintLatched;
             }
             Sprinting = sprintHeld && !_crouch && mv.y > 0.35f;
             // water
@@ -413,7 +419,7 @@ namespace Undertow
             Focus = best;
             var hud = Game.UI.Hud;
             hud.LookingAtInteractable = best != null;
-            hud.PromptText = best != null ? (TouchControls.Active ? "[AL]" : Game.Input.Tag(Game.Input.Interact)) + "  " + best.Prompt : null;
+            hud.PromptText = best != null ? Game.Input.Tag(Game.Input.Interact) + "  " + best.Prompt : null;
             hud.PromptDimmed = best != null && best.Item.Need != null && !Rt.Session.NeedsMet(best.Item);
         }
 

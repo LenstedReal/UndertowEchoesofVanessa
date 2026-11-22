@@ -237,6 +237,20 @@ namespace Undertow.Tests
         }
 
         [Test]
+        public void FullLanternDoesNotStallAnObjective()
+        {
+            // someone who filled the lantern below deck first must still get past "take the oil at the stern"
+            var s = Session(1);
+            s.Lantern.Restore(100f, true);
+            Assert.AreEqual("a1_oil_stern", s.CurrentGoal.Flag);
+            var r = s.Interact("a1_oil_stern");
+            Assert.AreEqual(Outcome.OilFull, r.Outcome);
+            Assert.IsTrue(s.State.Has("a1_oil_stern"));
+            Assert.AreNotEqual("a1_oil_stern", s.CurrentGoal.Flag);
+            Assert.IsFalse(s.IsConsumed(ContentDb.Act(1).Item("a1_oil_stern")), "the flask is still there for later");
+        }
+
+        [Test]
         public void OilFlaskStaysWhenLanternIsFull()
         {
             var s = Session(1);

@@ -16,12 +16,14 @@ namespace Undertow
         Transform _cam;
         Atmos _atmos;
         Transform _kids;
+        float _t0;
 
         public static void Create(GameState s)
         {
             var go = new GameObject("[Ending]");
             var d = go.AddComponent<EndingsDirector>();
             d._s = s;
+            d._t0 = Time.time;
             d.Build();
             d.StartCoroutine(d.Play());
         }
@@ -158,7 +160,9 @@ namespace Undertow
 
         void Update()
         {
-            float t = Time.time;
+            // seconds since this ending began: Time.time counts from the start of the program, and after a
+            // long session the slow camera drifts below would have carried it hundreds of metres away
+            float t = Time.time - _t0;
             var e = Ending;
             if (e == EndingId.Answer && _kids != null)
             {

@@ -6,7 +6,7 @@ Birinci şahıs psikolojik korku oyunu · Windows / Steam · Unity 6 HDRP · 10 
 
 ## Oyun
 
-Oyunun tamamı [`unity-project/`](unity-project/) klasöründe: Unity **6000.3.27f1**, HDRP 17.3.0, sürüm **0.3.2**. Açma, build alma ve güncel durum: [`unity-project/README.md`](unity-project/README.md).
+Oyunun tamamı [`unity-project/`](unity-project/) klasöründe: Unity **6000.3.27f1**, HDRP 17.3.0, sürüm **0.3.3**. Açma, build alma ve güncel durum: [`unity-project/README.md`](unity-project/README.md).
 
 ## Belgeler
 | Dosya | İçerik |
@@ -23,8 +23,9 @@ Oyunun tamamı [`unity-project/`](unity-project/) klasöründe: Unity **6000.3.2
 - [x] Story Bible, oyun tasarımı, prototip denetimi
 - [x] Unity 6 HDRP projesi: dört bölüm, üç son, 10 dil, ayarlar, fotoğraf modu (0.3.0)
 - [x] Unity Build Automation ile ilk Windows build'i (0.3.0): açıldı, sesler çalıştı, ekran pembe kaldı → 0.3.1'de düzeltildi
-- [x] 0.3.1: görüntü doğru; telefondan test için dokunmatik test kontrolleri 0.3.2'de eklendi (Steam'den önce kapatılacak)
-- [ ] Unity Editor'de ilk açılış ve oynanış testi (gerçek ekran kartlı Windows bilgisayar)
+- [x] 0.3.1: görüntü doğru; 0.3.2: tıklanabilir menüler ve geçici dokunmatik test tuşları
+- [x] 0.3.3: klavye + fareye dönüş (dokunmatik tuşlar kaldırıldı), başsız benzetimle baştan sona hata taraması, eski bilgisayarlar için otomatik kalite ve F3 tanı paneli
+- [ ] 0.3.3'ün gerçek ekran kartlı bir Windows bilgisayarda oynanış testi
 - [ ] Seslendirme kaydı, 8 dilin anadili kontrolü
 - [ ] Steam sayfası + demo, Next Fest
 

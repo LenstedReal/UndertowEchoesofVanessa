@@ -258,6 +258,8 @@ namespace Undertow.Logic
                     {
                         r.Outcome = Outcome.OilFull;
                         r.MessageKey = "msg.oil_full";
+                        // The flask stays for later, but an objective that asks for it must not stall on a full lantern.
+                        if (item.Flag != null && Act.Goals.Any(g => g.Flag == item.Flag)) SetFlag(r, item.Flag);
                         return r;
                     }
                     r.OilAdded = added;

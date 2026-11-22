@@ -59,6 +59,8 @@ ui.main_menu = Menú principal
 ui.menu_body = ¿Volver al menú principal? Se perderá el progreso desde el último punto de control.
 ui.quit_desktop = Salir al escritorio
 ui.quit_body = ¿Salir al escritorio? Se perderá el progreso desde el último punto de control.
+ui.error.title = Algo salió mal
+ui.error.body = No se pudo cargar esta parte del juego. Tus partidas guardadas están a salvo. Si informas del problema, incluye la línea de abajo.
 ui.objective = Objetivo
 ui.pause_stats = Dibujos encontrados: {0} de 6      Aceite del farol: {1} %
 ui.journal = Diario
@@ -184,6 +186,8 @@ ui.photo.saved = Foto guardada:
 
 hud.saving = Guardando…
 toast.achievement = Logro desbloqueado
+msg.tut_move_kb = {0} caminar   ·   Ratón: mirar   ·   {1} usar   ·   {2} diario
+msg.tut_move_pad = {0} caminar   ·   {1} mirar   ·   {2} usar   ·   {3} diario
 msg.tut_lantern = {0}  Prender y apagar el farol. Gasta aceite mientras está encendido.
 msg.tut_listen = Mantén {0} para escuchar. Las voces te muestran el camino.
 msg.no_oil = No queda aceite.

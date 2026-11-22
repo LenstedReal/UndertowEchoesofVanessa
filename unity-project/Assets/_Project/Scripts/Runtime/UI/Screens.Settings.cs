@@ -19,6 +19,7 @@ namespace Undertow
         int _tab;
         RectTransform _body, _tabRow;
         ScrollRect _scroll;
+        readonly ScrollFollow _follow = new ScrollFollow();
         Text _desc;
         readonly List<Selectable> _rows = new List<Selectable>();
         readonly Dictionary<Selectable, string> _help = new Dictionary<Selectable, string>();
@@ -247,7 +248,7 @@ namespace Undertow
         // ------------------------------------------------------------------ input
         public override void Tick()
         {
-            if (Game.Input.Rebinding) return;
+            if (Game.Input.RebindBusy) return;
             var k = Keyboard.current;
             var g = Gamepad.current;
             if ((k != null && k.qKey.wasPressedThisFrame) || (g != null && g.leftShoulder.wasPressedThisFrame)) SetTab(_tab - 1);
@@ -256,18 +257,8 @@ namespace Undertow
             var es = EventSystem.current;
             var sel = es != null && es.currentSelectedGameObject != null ? es.currentSelectedGameObject.GetComponent<Selectable>() : null;
             _desc.text = sel != null && _help.TryGetValue(sel, out var key) ? Game.Loc[key] : "";
-            // keep the selected row on screen
-            if (sel != null && sel.transform.IsChildOf(_scroll.content))
-            {
-                var rt = (RectTransform)sel.transform;
-                float contentH = _scroll.content.rect.height, viewH = _scroll.viewport.rect.height;
-                if (contentH > viewH)
-                {
-                    float y = -rt.anchoredPosition.y;
-                    float target = Mathf.Clamp01((y - viewH * 0.5f) / (contentH - viewH));
-                    _scroll.verticalNormalizedPosition = Mathf.Lerp(_scroll.verticalNormalizedPosition, 1f - target, Time.unscaledDeltaTime * 12f);
-                }
-            }
+            // keep the selected row on screen (after keyboard / gamepad moves; the mouse wheel is left alone)
+            _follow.Tick(_scroll, 12f);
         }
 
         void ResetTab()

@@ -36,7 +36,7 @@ namespace Undertow
                 _pendingState = ContentDb.ChapterStartState(act.Id);
                 _pendingSlot = -1;
                 Game.Saves.ActiveSlot = -1;
-                BuildForScene(sceneName);
+                TryBuild(sceneName);
                 yield return Game.UI.Fade(0f, 1.2f);
                 yield break;
             }
@@ -47,13 +47,45 @@ namespace Undertow
                 s.Altar = AltarChoice.Echo;
                 s.Ending = EndingId.Surface;
                 _pendingState = s;
-                BuildForScene(sceneName);
+                TryBuild(sceneName);
                 yield return Game.UI.Fade(0f, 1.2f);
                 yield break;
             }
             // Main menu (or an unknown scene): boot sequence, then the menu
-            BuildForScene(ContentDb.MenuScene);
+            if (!TryBuild(ContentDb.MenuScene))
+            {
+                Game.UI.SetFade(0f);
+                yield break;
+            }
             yield return BootSequence.Run();
+        }
+
+        /// <summary>
+        /// Builds the scene's world. If that throws, the player gets a readable screen with a way out
+        /// instead of a black picture: the reason is shown, logged, and kept for the F3 overlay.
+        /// </summary>
+        bool TryBuild(string sceneName)
+        {
+            try
+            {
+                BuildForScene(sceneName);
+                return true;
+            }
+            catch (System.Exception e)
+            {
+                Debug.LogException(e);
+                var half = Game.Act;
+                Game.Act = null;
+                if (half != null) Destroy(half.gameObject);
+                _pendingState = null;
+                Time.timeScale = 1f;
+                Game.UI.InGame = false;
+                Game.UI.Cinematic = false;
+                Game.UI.PopAll();
+                Game.UI.HideLoading();
+                Game.UI.Push(new ErrorScreen(e, sceneName != ContentDb.MenuScene));
+                return false;
+            }
         }
 
         void BuildForScene(string sceneName)
@@ -165,6 +197,8 @@ namespace Undertow
         {
             _busy = true;
             Game.UI.Cinematic = false;
+            // whatever music belongs to the place we are leaving (the menu theme, the choir) fades with the picture
+            Game.Audio.StopMusic(0.8f);
             yield return Game.UI.Fade(1f, 0.9f);
             Game.UI.PopAll();
             var act = ContentDb.ActForScene(scene);
@@ -182,7 +216,13 @@ namespace Undertow
             var op = SceneManager.LoadSceneAsync(scene, LoadSceneMode.Single);
             while (op != null && !op.isDone) yield return null;
             yield return null;
-            BuildForScene(scene);
+            if (!TryBuild(scene))
+            {
+                // the error screen is up: free the flow first (its buttons start a new scene change), then show it
+                _busy = false;
+                yield return Game.UI.Fade(0f, 0.4f);
+                yield break;
+            }
             if (act != null)
             {
                 // let the loading card breathe and the first frames render

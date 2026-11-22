@@ -133,7 +133,7 @@ namespace Undertow
             var r = b.Rect;
             var center = new Vector3(r.X + r.W * 0.5f, 0, r.Z + r.D * 0.5f);
             var room = w.RoomAt(new Vector3(center.x, 50f, center.z)) ?? w.Act.RoomAt(center.x, center.z);
-            float floor = FloorBelow(w, center);
+            float floor = FloorFor(w, b, center);
             center.y = floor;
             var go = new GameObject("blocker_" + b.Id);
             go.transform.SetParent(parent, false);
@@ -221,6 +221,28 @@ namespace Undertow
                 }
             }
             return bl;
+        }
+
+        /// <summary>
+        /// The floor a blocker stands on. Decks overlap in plan, so "the room at this x,z" is not enough:
+        /// a door belongs to the doorway it closes and stands on that doorway's floor (the cabin door of the
+        /// gun deck must not end up on the open deck above it).
+        /// </summary>
+        static float FloorFor(World w, BlockerDef b, Vector3 center)
+        {
+            float best = float.NaN, bestDist = float.MaxValue;
+            float reach = Mathf.Max(b.Rect.W, b.Rect.D) * 0.5f + 0.6f;
+            if (w.Level != null)
+            {
+                foreach (var o in w.Level.Openings)
+                {
+                    float d = new Vector2(o.Center.X - center.x, o.Center.Z - center.z).magnitude;
+                    if (d > reach || d >= bestDist) continue;
+                    bestDist = d;
+                    best = o.Y;
+                }
+            }
+            return float.IsNaN(best) ? FloorBelow(w, center) : best;
         }
 
         static float FloorBelow(World w, Vector3 p)

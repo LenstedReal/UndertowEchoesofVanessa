@@ -72,6 +72,17 @@ namespace Undertow
             return rt;
         }
 
+        /// <summary>A band anchored to the left edge that always spans the full screen height (any aspect ratio).</summary>
+        public static RectTransform FullHeight(RectTransform rt, float pivotX, float x, float width, float extraHeight = 0f)
+        {
+            rt.anchorMin = new Vector2(0f, 0f);
+            rt.anchorMax = new Vector2(0f, 1f);
+            rt.pivot = new Vector2(pivotX, 0.5f);
+            rt.anchoredPosition = new Vector2(x, 0f);
+            rt.sizeDelta = new Vector2(width, extraHeight);
+            return rt;
+        }
+
         public static RectTransform Anchor(RectTransform rt, Vector2 anchor, Vector2 pivot, Vector2 pos, Vector2 size)
         {
             rt.anchorMin = anchor;
@@ -429,6 +440,39 @@ namespace Undertow
             if (local.y < -40f || local.y > 40f) return;
             Set01(t);
             Refresh();
+        }
+    }
+
+    /// <summary>
+    /// Keeps the selected row of a scroll list in view after keyboard or gamepad navigation, and leaves the
+    /// list alone while the mouse drives it (wheel, drag, hover) so the two never fight over the position.
+    /// </summary>
+    public sealed class ScrollFollow
+    {
+        GameObject _last;
+        float _until;
+
+        public void Tick(ScrollRect scroll, float speed = 10f)
+        {
+            var es = UnityEngine.EventSystems.EventSystem.current;
+            if (es == null || scroll == null) return;
+            var sel = es.currentSelectedGameObject;
+            var m = UnityEngine.InputSystem.Mouse.current;
+            bool mouseBusy = m != null && (m.scroll.ReadValue().sqrMagnitude > 0.001f || m.delta.ReadValue().sqrMagnitude > 0.001f || m.leftButton.isPressed);
+            if (sel != _last)
+            {
+                _last = sel;
+                _until = mouseBusy ? 0f : Time.unscaledTime + 0.8f;
+            }
+            else if (mouseBusy) _until = 0f;
+            if (sel == null || Time.unscaledTime > _until) return;
+            var rt = sel.transform as RectTransform;
+            if (rt == null || scroll.content == null || scroll.viewport == null || !rt.IsChildOf(scroll.content)) return;
+            float contentH = scroll.content.rect.height, viewH = scroll.viewport.rect.height;
+            if (contentH <= viewH) return;
+            float y = -rt.anchoredPosition.y;
+            float target = Mathf.Clamp01((y - viewH * 0.5f) / (contentH - viewH));
+            scroll.verticalNormalizedPosition = Mathf.Lerp(scroll.verticalNormalizedPosition, 1f - target, Time.unscaledDeltaTime * speed);
         }
     }
 }

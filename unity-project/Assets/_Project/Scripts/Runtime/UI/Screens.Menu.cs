@@ -22,9 +22,9 @@ namespace Undertow
             if (Backdrop)
             {
                 var shade = UIKit.Image(Root, "Shade", new Color(0, 0, 0, 0.62f), UIKit.White);
-                UIKit.Anchor((RectTransform)shade.transform, new Vector2(0, 0), new Vector2(0, 0), Vector2.zero, new Vector2(ColumnX + ColumnWidth + 120f, 1080f));
+                UIKit.FullHeight((RectTransform)shade.transform, 0f, 0f, ColumnX + ColumnWidth + 120f);
                 var fade = UIKit.Image(Root, "ShadeEdge", new Color(0, 0, 0, 0.62f), UIKit.Soft);
-                UIKit.Anchor((RectTransform)fade.transform, new Vector2(0, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(ColumnX + ColumnWidth + 120f, 0), new Vector2(360f, 1800f));
+                UIKit.FullHeight((RectTransform)fade.transform, 0.5f, ColumnX + ColumnWidth + 120f, 360f, 720f);
             }
             TitleText = UIKit.Label(Root, "Title", title, 64, FontRole.Title, TextAnchor.LowerLeft);
             UIKit.Anchor((RectTransform)TitleText.transform, new Vector2(0, 1), new Vector2(0, 1), new Vector2(ColumnX, -top + 90f), new Vector2(ColumnWidth + 200f, 90f));
@@ -96,9 +96,9 @@ namespace Undertow
             Root = root;
             Items.Clear();
             var shade = UIKit.Image(root, "Shade", new Color(0, 0, 0, 0.5f), UIKit.White);
-            UIKit.Anchor((RectTransform)shade.transform, new Vector2(0, 0), new Vector2(0, 0), Vector2.zero, new Vector2(980f, 1080f));
+            UIKit.FullHeight((RectTransform)shade.transform, 0f, 0f, 980f);
             var edge = UIKit.Image(root, "ShadeEdge", new Color(0, 0, 0, 0.5f), UIKit.Soft);
-            UIKit.Anchor((RectTransform)edge.transform, new Vector2(0, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(980f, 0), new Vector2(420f, 1900f));
+            UIKit.FullHeight((RectTransform)edge.transform, 0.5f, 980f, 420f, 820f);
             var title = UIKit.Label(root, "Logo", "UNDERTOW", 132, FontRole.Title, TextAnchor.LowerLeft);
             UIKit.Anchor((RectTransform)title.transform, new Vector2(0, 1), new Vector2(0, 1), new Vector2(140, -120), new Vector2(1200, 170));
             var sub = UIKit.Label(root, "Sub", Game.Loc["ui.subtitle"], 40, FontRole.Document, TextAnchor.UpperLeft, UIKit.Accent);
@@ -294,19 +294,9 @@ namespace Undertow
         }
 
         ScrollRect _scroll;
+        readonly ScrollFollow _follow = new ScrollFollow();
 
-        public override void Tick()
-        {
-            var es = UnityEngine.EventSystems.EventSystem.current;
-            if (es == null || es.currentSelectedGameObject == null || _scroll == null) return;
-            var rt = es.currentSelectedGameObject.transform as RectTransform;
-            if (rt == null || !rt.IsChildOf(_scroll.content)) return;
-            float contentH = _scroll.content.rect.height, viewH = _scroll.viewport.rect.height;
-            if (contentH <= viewH) return;
-            float y = -rt.anchoredPosition.y;
-            float target = Mathf.Clamp01((y - viewH * 0.5f) / (contentH - viewH));
-            _scroll.verticalNormalizedPosition = Mathf.Lerp(_scroll.verticalNormalizedPosition, 1f - target, Time.unscaledDeltaTime * 10f);
-        }
+        public override void Tick() => _follow.Tick(_scroll, 10f);
     }
 
     /// <summary>Vanessa's drawings found in any save slot.</summary>
@@ -449,7 +439,9 @@ namespace Undertow
             _y += speed * (fast ? 4f : 1f) * Time.unscaledDeltaTime;
             _roll.anchoredPosition = new Vector2(0, _y);
             _height = _roll.rect.height;
-            if (_height > 20f && _y > _height + 1080f) Close();
+            float view = Root != null ? Root.rect.height : 1080f;
+            if (view < 100f) view = 1080f;
+            if (_height > 20f && _y > _height + view) Close();
         }
 
         public override void OnBack() => Close();
@@ -460,6 +452,65 @@ namespace Undertow
             Game.UI.Pop(this);
             _done?.Invoke();
         }
+    }
+
+    // ------------------------------------------------------------------ error
+    /// <summary>
+    /// Shown when a chapter (or the menu) could not be built. Says so plainly, shows the reason in
+    /// small print for a bug report, and offers a way out instead of leaving a black screen.
+    /// </summary>
+    public sealed class ErrorScreen : UIScreen
+    {
+        readonly string _reason;
+        readonly bool _canGoToMenu;
+
+        public ErrorScreen(Exception e, bool canGoToMenu)
+        {
+            string r = e == null ? "" : e.GetType().Name + ": " + e.Message;
+            if (r.Length > 300) r = r.Substring(0, 300) + "…";
+            _reason = r;
+            _canGoToMenu = canGoToMenu;
+        }
+
+        public override bool PausesGame => true;
+
+        public override void Build(RectTransform root)
+        {
+            Root = root;
+            var dim = UIKit.Image(root, "Dim", new Color(0, 0, 0, 0.92f));
+            UIKit.Stretch((RectTransform)dim.transform);
+            var panel = UIKit.Image(root, "Panel", UIKit.PanelLight);
+            UIKit.Anchor((RectTransform)panel.transform, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), Vector2.zero, new Vector2(1100, 520));
+            var t = UIKit.Label(panel.transform, "Title", Game.Loc["ui.error.title"], 46, FontRole.Title, TextAnchor.MiddleCenter, UIKit.Accent);
+            UIKit.Anchor((RectTransform)t.transform, new Vector2(0.5f, 1), new Vector2(0.5f, 1), new Vector2(0, -40), new Vector2(1000, 70));
+            var b = UIKit.Label(panel.transform, "Body", Game.Loc["ui.error.body"], 26, FontRole.Ui, TextAnchor.UpperCenter, UIKit.Dim);
+            UIKit.Anchor((RectTransform)b.transform, new Vector2(0.5f, 1), new Vector2(0.5f, 1), new Vector2(0, -130), new Vector2(980, 120));
+            var r = UIKit.Label(panel.transform, "Reason", _reason, 18, FontRole.Ui, TextAnchor.UpperCenter, UIKit.Dim);
+            UIKit.Anchor((RectTransform)r.transform, new Vector2(0.5f, 1), new Vector2(0.5f, 1), new Vector2(0, -260), new Vector2(980, 110));
+            var row = UIKit.Rect(panel.transform, "Row");
+            UIKit.Anchor(row, new Vector2(0.5f, 0), new Vector2(0.5f, 0), new Vector2(0, 50), new Vector2(_canGoToMenu ? 760 : 360, 70));
+            var h = row.gameObject.AddComponent<HorizontalLayoutGroup>();
+            h.spacing = 40;
+            h.childAlignment = TextAnchor.MiddleCenter;
+            h.childForceExpandWidth = true;
+            h.childControlWidth = true;
+            h.childControlHeight = true;
+            var list = new List<Selectable>();
+            if (_canGoToMenu)
+            {
+                var menu = MenuButton.Create<MenuButton>(row, Game.Loc["ui.main_menu"], 34, () => { Game.UI.Pop(this); Game.Flow.ToMenu(); }, 64f);
+                menu.Label.alignment = TextAnchor.MiddleCenter;
+                list.Add(menu);
+            }
+            var quit = MenuButton.Create<MenuButton>(row, Game.Loc["ui.quit"], 34, () => Application.Quit(), 64f);
+            quit.Label.alignment = TextAnchor.MiddleCenter;
+            list.Add(quit);
+            UIKit.ChainHorizontal(list);
+            FirstSelected = list[0];
+        }
+
+        // Esc must not drop the player onto an empty world
+        public override void OnBack() { }
     }
 
     // ------------------------------------------------------------------ confirm

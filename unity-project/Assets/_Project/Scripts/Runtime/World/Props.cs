@@ -433,12 +433,20 @@ namespace Undertow
             return p;
         }
 
-        public static PropMesh Lever()
+        /// <summary>The wall plate of a lever. The arm is a separate part so that pulling it shows.</summary>
+        public static PropMesh LeverBase()
         {
             var p = new PropMesh();
             p["iron"].Box(new Vector3(0, 0.6f, -0.02f), new Vector3(0.22f, 0.5f, 0.04f), Id);
-            p["iron"].Tube(new[] { new Vector3(0, 0.6f, 0.02f), new Vector3(0, 1.05f, 0.18f) }, 0.022f, 6, 0.3f);
-            p["wood_dark"].Cylinder(new Vector3(0, 1.05f, 0.18f), Quaternion.Euler(0, 0, 90), 0.16f, 0.03f, 0.03f, 8);
+            return p;
+        }
+
+        /// <summary>Lever arm and grip, modelled around its pivot (0, 0.6, 0.02 on the plate).</summary>
+        public static PropMesh LeverArm()
+        {
+            var p = new PropMesh();
+            p["iron"].Tube(new[] { Vector3.zero, new Vector3(0, 0.45f, 0.16f) }, 0.022f, 6, 0.3f);
+            p["wood_dark"].Cylinder(new Vector3(0, 0.45f, 0.16f), Quaternion.Euler(0, 0, 90), 0.16f, 0.03f, 0.03f, 8);
             return p;
         }
 

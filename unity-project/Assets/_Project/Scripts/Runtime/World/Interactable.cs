@@ -19,6 +19,27 @@ namespace Undertow
         public Renderer[] Visuals;
         public Vector3 Point;             // world point the prompt refers to
         bool _gone;
+        Coroutine _anim, _anim2;
+        Quaternion _rest;
+        bool _restKnown;
+
+        /// <summary>One animation at a time per part: a second press replaces the first instead of fighting it.</summary>
+        void Animate(IEnumerator e)
+        {
+            if (_anim != null) StopCoroutine(_anim);
+            _anim = StartCoroutine(e);
+        }
+
+        /// <summary>The moving part's rest pose, remembered before anything swings or pulls it.</summary>
+        Quaternion Rest()
+        {
+            if (!_restKnown && Moving != null)
+            {
+                _rest = Moving.localRotation;
+                _restKnown = true;
+            }
+            return _rest;
+        }
 
         public bool Gone => _gone;
 
@@ -94,13 +115,13 @@ namespace Undertow
                 case Outcome.BellRung:
                 case Outcome.BellSolved:
                 case Outcome.BellWrong:
-                    StartCoroutine(Swing());
+                    Animate(Swing());
                     break;
                 case Outcome.CrateMoved:
                 case Outcome.CrateSolved:
                 {
                     var slot = Item.Slots[r.Slot];
-                    StartCoroutine(Slide(World.Ground(slot.X, slot.Z, transform.position.y + 0.5f)));
+                    Animate(Slide(World.Ground(slot.X, slot.Z, transform.position.y + 0.5f)));
                     break;
                 }
                 case Outcome.DialTurned:
@@ -109,14 +130,15 @@ namespace Undertow
                     break;
                 case Outcome.MirrorTurned:
                 case Outcome.MirrorAligned:
-                    if (Moving != null) StartCoroutine(Turn(Moving, Moving.localRotation * Quaternion.Euler(0, 90f, 0), 0.7f));
+                    // the target comes from the rules, not from wherever the head happens to be mid-turn
+                    if (Moving != null && Game.Act != null) Animate(Turn(Moving, Quaternion.Euler(0, Game.Act.Session.MirrorTurns(Item) * 90f, 0), 0.7f));
                     break;
                 case Outcome.HatchOpened:
-                    if (Moving != null) StartCoroutine(Turn(Moving, Quaternion.Euler(112f, 0, 0), 1.6f));
+                    if (Moving != null) Animate(Turn(Moving, Quaternion.Euler(112f, 0, 0), 1.6f));
                     foreach (var c in GetComponentsInChildren<Collider>()) if (!c.isTrigger) c.enabled = false;
                     break;
                 case Outcome.Reset:
-                    if (Moving != null) StartCoroutine(Pull());
+                    if (Moving != null) Animate(Pull());
                     break;
                 case Outcome.Pickup:
                 case Outcome.Oil:
@@ -132,7 +154,7 @@ namespace Undertow
         IEnumerator Swing()
         {
             if (Moving == null) yield break;
-            var baseRot = Moving.localRotation;
+            var baseRot = Rest();
             float amp = 16f;
             for (float t = 0; t < 2.4f; t += Time.deltaTime)
             {
@@ -170,7 +192,7 @@ namespace Undertow
 
         IEnumerator Pull()
         {
-            var baseRot = Moving.localRotation;
+            var baseRot = Rest();
             yield return Turn(Moving, baseRot * Quaternion.Euler(55f, 0, 0), 0.35f);
             yield return new WaitForSeconds(0.3f);
             yield return Turn(Moving, baseRot, 0.6f);
@@ -191,8 +213,12 @@ namespace Undertow
                 if (Hand2 != null) Hand2.localRotation = mr;
                 return;
             }
-            StartCoroutine(Turn(Moving, hr, 0.8f));
-            if (Hand2 != null) StartCoroutine(Turn(Hand2, mr, 0.8f));
+            Animate(Turn(Moving, hr, 0.8f));
+            if (Hand2 != null)
+            {
+                if (_anim2 != null) StopCoroutine(_anim2);
+                _anim2 = StartCoroutine(Turn(Hand2, mr, 0.8f));
+            }
         }
 
         void SetFire(bool on, bool instant)
@@ -461,11 +487,11 @@ namespace Undertow
                 }
                 case "lever":
                     go = Root(w, it, parent, floorPos, out ia);
-                    var lev = Props.Lever();
-                    lev.Spawn("lever", go.transform, Vector3.zero, Quaternion.identity);
+                    Props.LeverBase().Spawn("base", go.transform, Vector3.zero, Quaternion.identity);
                     var arm = new GameObject("arm").transform;
                     arm.SetParent(go.transform, false);
                     arm.localPosition = new Vector3(0, 0.6f, 0.02f);
+                    Props.LeverArm().Spawn("handle", arm, Vector3.zero, Quaternion.identity);
                     ia.Moving = arm;
                     Trigger(go, new Vector3(0, 0.9f, 0.1f), new Vector3(0.5f, 0.9f, 0.4f));
                     break;

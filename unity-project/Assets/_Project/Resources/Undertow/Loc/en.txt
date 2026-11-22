@@ -63,6 +63,8 @@ ui.main_menu = Main Menu
 ui.menu_body = Return to the main menu? Progress since the last checkpoint will be lost.
 ui.quit_desktop = Quit to Desktop
 ui.quit_body = Quit to the desktop? Progress since the last checkpoint will be lost.
+ui.error.title = Something went wrong
+ui.error.body = This part of the game could not be loaded. Your saves are safe. If you report the problem, please include the line below.
 ui.objective = Objective
 ui.pause_stats = Drawings found: {0} of 6      Lantern oil: {1}%
 ui.journal = Journal
@@ -192,6 +194,8 @@ ui.photo.saved = Photo saved:
 # ---------------------------------------------------------------- HUD and messages
 hud.saving = Saving…
 toast.achievement = Achievement unlocked
+msg.tut_move_kb = {0} walk   ·   Mouse: look   ·   {1} use   ·   {2} journal
+msg.tut_move_pad = {0} walk   ·   {1} look   ·   {2} use   ·   {3} journal
 msg.tut_lantern = {0}  Lantern on and off. It burns oil while it is lit.
 msg.tut_listen = Hold {0} to listen. Voices show you the way.
 msg.no_oil = No oil left.
