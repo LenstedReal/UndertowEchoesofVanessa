@@ -108,9 +108,12 @@ namespace Undertow
             if (room != Room) OnRoomChanged(room);
 
             bool control = !Player.InputLocked && Game.UI.ScreenCount == 0 && !Game.UI.Cinematic && !Finishing && !Game.Flow.Busy;
-            if (control && Game.Input.Lantern.WasPressedThisFrame()) ToggleLantern();
+            if (control && (Game.Input.Lantern.WasPressedThisFrame() || TouchControls.TakeLantern())) ToggleLantern();
             ListenTick(control, dt);
-            if (control && Game.Input.Interact.WasPressedThisFrame() && Player.Focus != null) Use(Player.Focus);
+            // with the touch test controls a tap is a left click: the overlay decides what it means, not the click binding
+            bool interact = Game.Input.Interact.WasPressedThisFrame() &&
+                            !(TouchControls.Active && UnityEngine.InputSystem.Mouse.current != null && UnityEngine.InputSystem.Mouse.current.leftButton.wasPressedThisFrame);
+            if (control && (interact || TouchControls.TakeInteract()) && Player.Focus != null) Use(Player.Focus);
 
             if (control) WalkInExits(feet);
             if (Session.Lantern.Tick(dt, Player.Sprinting)) OnLanternOut();

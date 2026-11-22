@@ -87,7 +87,7 @@ namespace Undertow
             }
             _page = UIKit.Rect(paper.transform, "Page");
             UIKit.Stretch(_page, 90, 70, 90, 70);
-            MenuScreen.Hints(root, Game.Input.UsingGamepad ? "[LB] [RB]" : "[Q] [E]");
+            MenuScreen.Hints(root, Game.Input.UsingGamepad ? "[LB] [RB]" : "[Q] [E]", OnBack);
             Page();
         }
 

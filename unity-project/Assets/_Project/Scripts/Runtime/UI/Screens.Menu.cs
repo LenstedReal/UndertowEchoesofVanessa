@@ -39,16 +39,19 @@ namespace Undertow
             Column = UIKit.Rect(Root, "Column");
             UIKit.Anchor(Column, new Vector2(0, 1), new Vector2(0, 1), new Vector2(ColumnX, -top - (sub != null ? 84f : 40f)), new Vector2(ColumnWidth, 760f));
             UIKit.VList(Column, 4f);
-            Hints(Root);
+            Hints(Root, null, OnBack);
         }
 
-        public static void Hints(RectTransform root, string extra = null)
+        /// <summary>Key hints at the bottom right; with <paramref name="back"/>, also a clickable Back for the mouse and touch.</summary>
+        public static void Hints(RectTransform root, string extra = null, Action back = null)
         {
             bool pad = Game.Input.UsingGamepad;
             string ok = pad ? "[A]" : "[Enter]";
-            string back = pad ? "[B]" : "[Esc]";
-            var t = UIKit.Label(root, "Hints", (extra != null ? extra + "      " : "") + ok + "  " + Game.Loc["ui.select"] + "      " + back + "  " + Game.Loc["ui.back"], 22, FontRole.Ui, TextAnchor.LowerRight, UIKit.Faint);
+            string esc = pad ? "[B]" : "[Esc]";
+            var t = UIKit.Label(root, "Hints", (extra != null ? extra + "      " : "") + ok + "  " + Game.Loc["ui.select"] + "      " + esc + "  " + Game.Loc["ui.back"], 22, FontRole.Ui, TextAnchor.LowerRight, UIKit.Faint);
             UIKit.Anchor((RectTransform)t.transform, new Vector2(1, 0), new Vector2(1, 0), new Vector2(-60, 40), new Vector2(1200, 40));
+            if (back != null)
+                UIKit.Anchor(UIKit.TextButton(root, "Back", "<  " + Game.Loc["ui.back"], 26, back), new Vector2(0, 0), new Vector2(0, 0), new Vector2(60, 28), new Vector2(240, 58));
         }
 
         protected MenuButton Button(string key, Action click, bool disabled = false, int size = 38)
@@ -362,7 +365,7 @@ namespace Undertow
                 UIKit.Anchor((RectTransform)cap.transform, new Vector2(0.5f, 0), new Vector2(0.5f, 0), new Vector2(0, 26), new Vector2(420, 40));
             }
             FirstSelected = first;
-            MenuScreen.Hints(root);
+            MenuScreen.Hints(root, null, OnBack);
         }
     }
 
@@ -441,7 +444,8 @@ namespace Undertow
         {
             float speed = 62f;
             bool fast = (UnityEngine.InputSystem.Keyboard.current != null && UnityEngine.InputSystem.Keyboard.current.spaceKey.isPressed) ||
-                        (UnityEngine.InputSystem.Gamepad.current != null && UnityEngine.InputSystem.Gamepad.current.buttonSouth.isPressed);
+                        (UnityEngine.InputSystem.Gamepad.current != null && UnityEngine.InputSystem.Gamepad.current.buttonSouth.isPressed) ||
+                        (UnityEngine.InputSystem.Mouse.current != null && UnityEngine.InputSystem.Mouse.current.leftButton.isPressed);
             _y += speed * (fast ? 4f : 1f) * Time.unscaledDeltaTime;
             _roll.anchoredPosition = new Vector2(0, _y);
             _height = _roll.rect.height;

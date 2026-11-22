@@ -1,4 +1,4 @@
-# Bilinen durumlar ve sınırlar — v0.3.1 (22 Kasım 2026)
+# Bilinen durumlar ve sınırlar — v0.3.2 (22 Kasım 2026)
 
 Bu liste, yapılmamış ya da burada doğrulanamamış her şeyi açıkça yazar.
 
@@ -6,7 +6,12 @@ Bu liste, yapılmamış ya da burada doğrulanamamış her şeyi açıkça yazar
 
 - Unity Build Automation 0.3.0'ı gerçek Unity'de hatasız derledi ve Windows build'i çıkardı (#4).
 - Build bulut bilgisayarda (AirGPU, NVIDIA L4, Windows Server 2025) açıldı: oyun çalıştı, sesler geldi, **ama ekran tamamen pembeydi.** Sebep ve düzeltme `CHANGES.md` → 0.3.1'de.
-- **0.3.1 düzeltmesi henüz yeni bir build'le denenmedi.**
+- 0.3.1 build'i aynı makinede açıldı: görüntü doğru, sağ altta v0.3.1. Parlaklık ekranında takıldı: o ekran yalnızca klavye ve kolla geçiliyordu, Moonlight'ın ekran kolu ise bu makinede oyuna ulaşmadı.
+- **0.3.2'deki dokunmatik test kontrolleri ve tıklanabilir menüler henüz gerçek bir build'de denenmedi.**
+
+## Steam'den önce kaldırılacak
+
+- **Dokunmatik test kontrolleri** yalnızca telefondan bulut bilgisayarla test için var. Steam build'inden önce `Assets/_Project/Scripts/Runtime/UI/TouchControls.cs` içinde `Enabled = false` yapılacak (ya da dosya ve `TouchControls` çağrıları silinecek).
 
 ## Doğrulanmadı
 

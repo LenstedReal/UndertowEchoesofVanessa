@@ -1,5 +1,13 @@
 # Değişiklikler
 
+## 0.3.2 — 22 Kasım 2026
+
+0.3.1 bulut bilgisayarda açıldı: görüntü doğru (pembe ekran gitti), sürüm v0.3.1. Ama oyun telefondan Moonlight ile oynanırken ilerlenemedi: Moonlight'ın ekran kolu bu makinede Windows'a ulaşmıyor, dokunmalar oyuna yalnızca fare tıklaması olarak geliyor.
+
+- **Dokunmatik test kontrolleri (geçici, yalnızca test için):** Oynanış sırasında ekranda tıklanabilir tuşlar var. Sol tarafta İLERİ / GERİ / SOL / SAĞ (aç-kapa), DUR, KOŞ, EĞİL, DÜZ BAK, < DÖN / ARKA / DÖN >. Sağ tarafta AL / KULLAN, FENER, DİNLE, GÜNLÜK, MENÜ. Dünyada bir yere dokununca bakış oraya döner, nişangâha dokununca bakılan eşya kullanılır. Kol ya da klavye kullanılınca tuşlar gizlenir. **Steam sürümünden önce kapatılacak:** `Scripts/Runtime/UI/TouchControls.cs` içinde `Enabled = false`.
+- **Fare ve dokunmayla kullanım (kalıcı):** Parlaklık ekranına tıklanabilir `<`, `>` ve Onayla düğmeleri eklendi; önceden yalnızca klavye ve kolla geçiliyordu. Menülerin, günlüğün, ayarların ve galerinin sol altına tıklanabilir "Geri" eklendi. Jenerik, fare basılı tutulunca hızlanır.
+- Sürüm 0.3.2.
+
 ## 0.3.1 — 22 Kasım 2026
 
 İlk gerçek test: 0.3.0'ın Unity Build Automation build'i (#4) bulut bilgisayarda (NVIDIA L4, Windows Server 2025) açıldı. Oyun çalıştı, sesler geldi, ama ekran baştan sona pembe kaldı.

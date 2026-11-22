@@ -174,6 +174,7 @@ namespace Undertow
         readonly Action _done;
         Image[] _marks;
         Text _value;
+        bool _closed;
         static readonly float[] Levels = { 0.006f, 0.018f, 0.05f };
 
         public BrightnessScreen(bool first, Action done = null)
@@ -203,6 +204,20 @@ namespace Undertow
             UIKit.Anchor((RectTransform)_value.transform, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(0, -230), new Vector2(600, 60));
             var hint = UIKit.Label(root, "Hint", "<  >   " + Game.Loc["boot.bright.adjust"] + "      " + (Game.Input.UsingGamepad ? "[A]" : "[Enter]") + "  " + Game.Loc["ui.confirm"], 24, FontRole.Ui, TextAnchor.MiddleCenter, UIKit.Faint);
             UIKit.Anchor((RectTransform)hint.transform, new Vector2(0.5f, 0), new Vector2(0.5f, 0), new Vector2(0, 90), new Vector2(1200, 40));
+            // mouse and touch: a confirm button above the hint, arrows beside the value.
+            // Confirm comes first: with a pad, the UI root selects the first button and A submits it.
+            UIKit.Anchor(UIKit.TextButton(root, "Confirm", Game.Loc["ui.confirm"], 32, Close), new Vector2(0.5f, 0), new Vector2(0.5f, 0), new Vector2(0, 150), new Vector2(360, 72));
+            UIKit.Anchor(UIKit.TextButton(root, "Darker", "<", 44, () => Step(-1)), new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(-240, -230), new Vector2(100, 84));
+            UIKit.Anchor(UIKit.TextButton(root, "Brighter", ">", 44, () => Step(1)), new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(240, -230), new Vector2(100, 84));
+            Refresh();
+        }
+
+        void Step(int d)
+        {
+            var s = Game.Settings;
+            s.Brightness = Mathf.Clamp(Mathf.Round((s.Brightness + d * 0.1f) * 10f) / 10f, -2f, 2f);
+            s.NotifyChanged();
+            UIKit.PlayMove();
             Refresh();
         }
 
@@ -226,14 +241,7 @@ namespace Undertow
             int d = 0;
             if ((k != null && (k.leftArrowKey.wasPressedThisFrame || k.aKey.wasPressedThisFrame)) || (g != null && (g.dpad.left.wasPressedThisFrame || g.leftStick.left.wasPressedThisFrame))) d = -1;
             if ((k != null && (k.rightArrowKey.wasPressedThisFrame || k.dKey.wasPressedThisFrame)) || (g != null && (g.dpad.right.wasPressedThisFrame || g.leftStick.right.wasPressedThisFrame))) d = 1;
-            if (d != 0)
-            {
-                var s = Game.Settings;
-                s.Brightness = Mathf.Clamp(Mathf.Round((s.Brightness + d * 0.1f) * 10f) / 10f, -2f, 2f);
-                s.NotifyChanged();
-                UIKit.PlayMove();
-                Refresh();
-            }
+            if (d != 0) Step(d);
             if ((k != null && (k.enterKey.wasPressedThisFrame || k.spaceKey.wasPressedThisFrame || k.eKey.wasPressedThisFrame)) || (g != null && g.buttonSouth.wasPressedThisFrame)) Close();
         }
 
@@ -241,6 +249,8 @@ namespace Undertow
 
         void Close()
         {
+            if (_closed) return;
+            _closed = true;
             Game.Settings.Calibrated = true;
             Game.Settings.Save(Game.Saves.SettingsPath);
             UIKit.PlayConfirm();

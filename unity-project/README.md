@@ -1,4 +1,4 @@
-# Undertow: Echoes of Vanessa — Unity 6 HDRP (v0.3.1)
+# Undertow: Echoes of Vanessa — Unity 6 HDRP (v0.3.2)
 
 Birinci şahıs, hikâye odaklı psikolojik korku oyunu. Dört bölüm (Lanetli Kalyon, Gemi Mezarlığı, Terk Edilmiş Liman, Batık Tapınak), üç son, on dil.
 
@@ -8,7 +8,7 @@ Birinci şahıs, hikâye odaklı psikolojik korku oyunu. Dört bölüm (Lanetli 
 | Render pipeline | HDRP **17.3.0** (core, shadergraph, vfx 17.3.0) |
 | Input | Input System 1.11.2 (yalnızca yeni sistem) |
 | Hedef | Windows x86-64, DirectX 12 / DirectX 11 |
-| Sürüm | `bundleVersion` 0.3.1 |
+| Sürüm | `bundleVersion` 0.3.2 |
 
 ## Durum — dürüst özet
 
@@ -49,6 +49,12 @@ HDRP, compute shader destekleyen **gerçek bir DirectX 11/12 ekran kartı** iste
 - Geliştirme sürümü: **Undertow > Build Windows 64-bit Development Player**
 - **Unity Build Automation:** panelde ek ayar gerekmez. Her build'den önce `UndertowBuildPreprocess` çalışır: malzemeleri `Resources/Undertow/Materials` altına üretir ve `UI/Default` shader'ını build'e ekler. Bu adım olmadan build açılır ama her şey pembe görünür (0.3.0'da olan buydu). Çıkan exe'nin adı build hedefinin adıdır (ör. `Undertow Windows 64.exe`); ZIP'teki `*_BurstDebugInformation_DoNotShip` ve `*_BackUpThisFolder_ButDontShipItWithYourGame` klasörleri oyuna gerekmez, Steam'e yüklenmez.
 - `DevOps/unity_build_automation.yaml` yalnızca adımların açıklamasıdır; Build Automation bu dosyayı okumaz. Komut satırı giriş noktaları: `UndertowAssetImportQuality.ConfigureAllProjectAssets`, `UndertowHDRPSceneBuilder.BuildAllScenes`, `UndertowBatchValidator.ValidateAll`, `UndertowBatchValidator.BuildWindows64Release`.
+
+## Dokunmatik test kontrolleri (geçici)
+
+Telefondan bulut bilgisayarla (Moonlight) test ederken kol ve klavye olmadan oynanabilsin diye oynanış ekranında tıklanabilir tuşlar çıkar: İLERİ / GERİ / SOL / SAĞ (aç-kapa), DUR, KOŞ, EĞİL, DÜZ BAK, < DÖN / ARKA / DÖN >, AL / KULLAN, FENER, DİNLE, GÜNLÜK, MENÜ. Dünyada bir noktaya dokunmak bakışı oraya çevirir, nişangâha dokunmak bakılan eşyayı kullanır. Moonlight'ta "Dokunmatik ekranı trackpad olarak kullan" kapalı olmalı.
+
+**Steam build'inden önce kapat:** `Assets/_Project/Scripts/Runtime/UI/TouchControls.cs` → `Enabled = false`.
 
 ## Oyunda neler var
 

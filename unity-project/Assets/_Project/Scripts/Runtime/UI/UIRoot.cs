@@ -114,6 +114,7 @@ namespace Undertow
 
             var root = (RectTransform)transform;
             HudLayer = UIKit.Stretch(UIKit.Rect(root, "Hud"));
+            TouchControls.Build(root);   // TEST BUILD: on-screen buttons above the HUD, below every menu
             _dim = UIKit.Image(root, "Dim", new Color(0, 0, 0, 0.55f));
             UIKit.Stretch((RectTransform)_dim.transform);
             _dim.enabled = false;
@@ -244,6 +245,7 @@ namespace Undertow
 
         public void Tick()
         {
+            TouchControls.Tick();
             // back / cancel for the top screen (gameplay map may be disabled, read devices directly)
             var top = Top;
             if (top != null && !Game.Input.Rebinding)
@@ -260,8 +262,8 @@ namespace Undertow
             }
             else if (CanPauseNow)
             {
-                if (Game.Input.Pause.WasPressedThisFrame()) OpenPause();
-                else if (Game.Input.Journal.WasPressedThisFrame()) OpenJournal();
+                if (Game.Input.Pause.WasPressedThisFrame() || TouchControls.TakePause()) OpenPause();
+                else if (Game.Input.Journal.WasPressedThisFrame() || TouchControls.TakeJournal()) OpenJournal();
                 else if (Game.Input.Photo.WasPressedThisFrame() && Game.Act != null) Push(new PhotoMode());
                 else if (Game.Input.HideHud.WasPressedThisFrame())
                 {
@@ -269,8 +271,10 @@ namespace Undertow
                     RefreshMode();
                 }
             }
-            bool cursor = top != null ? top.ShowCursor : !InGame;
+            bool cursor = top != null ? top.ShowCursor : (!InGame || TouchControls.Active);
             Cursor.visible = cursor && !Game.Input.UsingGamepad;
+            // the touch test controls need a free cursor during play; RefreshMode locks it otherwise
+            if (TouchControls.Enabled && top == null && InGame) Cursor.lockState = cursor ? CursorLockMode.None : CursorLockMode.Locked;
             if (_loading.gameObject.activeSelf) _spinner.rectTransform.Rotate(0, 0, -240f * Time.unscaledDeltaTime);
             Hud.Tick();
             Subtitles.Tick();

@@ -317,6 +317,7 @@ namespace Undertow
                 want = control && _listenToggled;
             }
             else want = control && Game.Input.Listen.IsPressed();
+            if (control && TouchControls.Listening) want = true;
             if (want != Listening)
             {
                 Listening = want;

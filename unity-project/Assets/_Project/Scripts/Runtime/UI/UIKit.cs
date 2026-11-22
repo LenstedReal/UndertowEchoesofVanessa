@@ -82,6 +82,25 @@ namespace Undertow
             return rt;
         }
 
+        /// <summary>
+        /// A clickable text for the mouse and touch, kept out of keyboard / pad navigation.
+        /// Plays no sound itself: the action decides (move, confirm or back).
+        /// </summary>
+        public static RectTransform TextButton(Transform parent, string name, string text, int size, Action onClick, Color? background = null)
+        {
+            var rt = Rect(parent, name);
+            var bg = rt.gameObject.AddComponent<UnityEngine.UI.Image>();
+            bg.color = background ?? new Color(1f, 1f, 1f, 0.06f);
+            bg.raycastTarget = true;
+            var b = rt.gameObject.AddComponent<Button>();
+            b.transition = Selectable.Transition.None;
+            b.navigation = new Navigation { mode = Navigation.Mode.None };
+            b.onClick.AddListener(() => onClick?.Invoke());
+            var t = Label(rt, "Text", text, size, FontRole.Ui, TextAnchor.MiddleCenter, Ink);
+            Stretch((RectTransform)t.transform);
+            return rt;
+        }
+
         public static Image Image(Transform parent, string name, Color color, Sprite sprite = null)
         {
             var rt = Rect(parent, name);

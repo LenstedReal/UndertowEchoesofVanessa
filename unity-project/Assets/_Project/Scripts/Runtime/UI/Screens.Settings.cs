@@ -63,7 +63,7 @@ namespace Undertow
             _body = UIKit.ScrollList(area, out _scroll, 2f);
             _desc = UIKit.Label(root, "Desc", "", 24, FontRole.Ui, TextAnchor.UpperLeft, UIKit.Dim);
             UIKit.Anchor((RectTransform)_desc.transform, new Vector2(0, 1), new Vector2(0, 1), new Vector2(1320, -240), new Vector2(460, 600));
-            MenuScreen.Hints(root, (Game.Input.UsingGamepad ? "[X]" : "[R]") + "  " + Game.Loc["ui.reset_tab"]);
+            MenuScreen.Hints(root, (Game.Input.UsingGamepad ? "[X]" : "[R]") + "  " + Game.Loc["ui.reset_tab"], OnBack);
             _resolutions = Screen.resolutions.Select(r => new Resolution { width = r.width, height = r.height }).GroupBy(r => r.width * 100000 + r.height).Select(g => g.First()).OrderBy(r => r.width * 100000 + r.height).ToArray();
             Fill();
         }
